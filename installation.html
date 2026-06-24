@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation - My Toolbox</title>
+    <meta name="description" content="Install My Toolbox - Step-by-step guides for Windows.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:60px 20px; text-align:center; }
+        .page-hero h1 { font-size:38px; margin-bottom:12px; }
+        .page-hero p { font-size:16px; opacity:0.9; }
+
+        .container { max-width:900px; margin:0 auto; padding:50px 20px; }
+
+        .card { background:white; border-radius:12px; padding:30px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .card h2 { font-size:20px; color:var(--primary); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .card h3 { font-size:16px; color:var(--text); margin:20px 0 10px; }
+        .card p { font-size:14px; color:#444; margin-bottom:12px; }
+        .card ol, .card ul { margin:10px 0 14px 22px; font-size:14px; color:#444; }
+        .card li { margin-bottom:8px; line-height:1.8; }
+
+        /* CODE BLOCK */
+        .code-block {
+            background:#f5f5f5; border:1px solid var(--border); border-radius:6px;
+            padding:14px; margin:12px 0; font-family:'Courier New', monospace;
+            font-size:13px; color:#333; overflow-x:auto; line-height:1.5;
+        }
+
+        /* INFO BOX */
+        .info-box { background:#e7f3ff; border:1px solid #b3d9ff; border-left:4px solid var(--primary); border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#004085; }
+        .warning-box { background:#fff3cd; border:1px solid #ffc107; border-left:4px solid #ffc107; border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#856404; }
+        .success-box { background:#d4edda; border:1px solid #28a745; border-left:4px solid #28a745; border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#155724; }
+
+        /* REQUIREMENTS TABLE */
+        .req-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-bottom:20px; }
+        .req-item { background:var(--light); padding:16px; border-radius:6px; border-left:4px solid var(--primary); font-size:13px; }
+        .req-item strong { display:block; color:var(--primary); margin-bottom:4px; }
+
+        /* STEPS */
+        .steps-list { list-style:none; counter-reset: step; }
+        .steps-list li {
+            counter-increment: step; display:flex; gap:12px; align-items:flex-start;
+            padding:12px 0; border-bottom:1px solid #f0f0f0; font-size:14px; color:#444;
+        }
+        .steps-list li:last-child { border-bottom:none; }
+        .steps-list li::before {
+            content: counter(step); flex-shrink:0; width:26px; height:26px; border-radius:50%;
+            background:var(--primary); color:white; display:flex; align-items:center; justify-content:center;
+            font-weight:bold; font-size:12px;
+        }
+
+        /* COMPARISON */
+        .comparison-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:10px; }
+        .comparison-table th { background:var(--light); padding:12px; text-align:left; border-bottom:2px solid var(--primary); font-weight:bold; color:var(--primary); }
+        .comparison-table td { padding:12px; border-bottom:1px solid var(--border); }
+        .comparison-table tr:hover { background:#fafafa; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">⚙️</span>
+        <h1 class="loading-title">Installation</h1>
+        <p class="loading-sub">Loading setup guide...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="documentation.html">Docs</a></li>
+            <li><a href="report.html">Report</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>⚙️ Installation Guide</h1>
+    <p>Get My Toolbox up and running in minutes</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>System Requirements</h2>
+        <div class="req-grid">
+            <div class="req-item"><strong>OS</strong> Windows 10 or later</div>
+            <div class="req-item"><strong>CPU</strong> Intel Core i5 (2nd Gen) or better</div>
+            <div class="req-item"><strong>RAM</strong> 8GB minimum</div>
+            <div class="req-item"><strong>Storage</strong> 500MB free space</div>
+            <div class="req-item"><strong>Internet</strong> Optional (required for AI & Currency tools)</div>
+            <div class="req-item"><strong>Architecture</strong> 64-bit recommended</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Installation Method 1: Using the Installer (Recommended)</h2>
+        <p>This is the easiest way to get started. No technical knowledge required.</p>
+        
+        <h3>Steps</h3>
+        <ol class="steps-list">
+            <li>Download the latest <code>MyToolbox-Setup.exe</code> from <a href="download.html" style="color:var(--primary);">the Download page</a> or <a href="https://github.com" target="_blank" style="color:var(--primary);">GitHub Releases</a></li>
+            <li>Run the downloaded <code>.exe</code> file</li>
+            <li>If Windows SmartScreen appears, click <strong>"More info"</strong> → <strong>"Run anyway"</strong> (this is a known false positive for fresh builds)</li>
+            <li>Follow the on-screen installer prompts (accept license, choose install location, etc.)</li>
+            <li>Wait for the installation to complete</li>
+            <li>Launch My Toolbox from the Start Menu or Desktop shortcut</li>
+        </ol>
+
+        <div class="success-box">
+            ✅ You're done! The app is ready to use. Pick a theme and start exploring all 21 tools.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Installation Method 2: Running from Source</h2>
+        <p>For developers, contributors, or anyone who prefers running from source code.</p>
+        
+        <h3>Prerequisites</h3>
+        <ul>
+            <li>Python 3.14 or later (<a href="https://www.python.org" target="_blank" style="color:var(--primary);">download here</a>)</li>
+            <li>Git (to clone the repo; <a href="https://git-scm.com" target="_blank" style="color:var(--primary);">download here</a>)</li>
+            <li>Basic command-line knowledge</li>
+        </ul>
+
+        <h3>Steps</h3>
+        <ol class="steps-list">
+            <li>Clone the repository:
+                <div class="code-block">git clone https://github.com/tanujgunasekara26-hue/my-toolbox.git</div>
+            </li>
+            <li>Navigate to the project directory:
+                <div class="code-block">cd my-toolbox</div>
+            </li>
+            <li>Install dependencies:
+                <div class="code-block">pip install -r requirements.txt --break-system-packages</div>
+            </li>
+            <li>Run the application:
+                <div class="code-block">python main.py</div>
+            </li>
+        </ol>
+
+        <div class="info-box">
+            💡 If you get a <code>ModuleNotFoundError</code>, make sure you're in the correct directory and all dependencies installed successfully. Re-run step 3 if needed.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Installation Method 3: Using a Virtual Environment (Python)</h2>
+        <p>Recommended if you want to isolate My Toolbox dependencies from your system Python.</p>
+        
+        <h3>Steps</h3>
+        <ol class="steps-list">
+            <li>Clone and navigate to the repo (same as Method 2, steps 1-2)</li>
+            <li>Create a virtual environment:
+                <div class="code-block">python -m venv venv</div>
+            </li>
+            <li>Activate the virtual environment:
+                <div class="code-block">venv\Scripts\activate</div>
+            </li>
+            <li>Install dependencies (no <code>--break-system-packages</code> needed here):
+                <div class="code-block">pip install -r requirements.txt</div>
+            </li>
+            <li>Run the app:
+                <div class="code-block">python main.py</div>
+            </li>
+        </ol>
+
+        <div class="info-box">
+            💡 To deactivate the virtual environment later, just run: <code>deactivate</code>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Windows SmartScreen Warning</h2>
+        <p>Fresh builds of My Toolbox may trigger Windows SmartScreen. This is a false positive — the app is safe.</p>
+        
+        <h3>How to Bypass It</h3>
+        <ol class="steps-list">
+            <li>When the SmartScreen popup appears, click <strong>"More info"</strong></li>
+            <li>Click <strong>"Run anyway"</strong> at the bottom right</li>
+            <li>Installation will proceed normally</li>
+        </ol>
+
+        <div class="warning-box">
+            ⚠️ If you don't see the "Run anyway" button, try downloading directly from <a href="https://github.com" target="_blank" style="color:#856404; text-decoration:underline;">our GitHub releases page</a> rather than other sources.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Troubleshooting</h2>
+        
+        <h3>❌ "ModuleNotFoundError: No module named 'PySide6'"</h3>
+        <p><strong>Solution:</strong> Dependencies didn't install. Re-run:</p>
+        <div class="code-block">pip install -r requirements.txt --break-system-packages</div>
+        
+        <h3>❌ App Won't Start / Crashes Immediately</h3>
+        <p><strong>Solution:</strong> Make sure you meet the system requirements above. If you do, try:</p>
+        <ul>
+            <li>Uninstall and reinstall using the latest version from <a href="download.html" style="color:var(--primary);">Downloads</a></li>
+            <li>Delete the <code>data/</code> folder (stores preferences/notes) and restart</li>
+            <li>Check the console for error messages (run from source and look for Python tracebacks)</li>
+        </ul>
+
+        <h3>❌ "Permission Denied" or "Access Denied" on Windows</h3>
+        <p><strong>Solution:</strong> Try running as Administrator:</p>
+        <ul>
+            <li>Right-click the shortcut or <code>.exe</code> file</li>
+            <li>Select <strong>"Run as administrator"</strong></li>
+        </ul>
+
+        <h3>❌ AI Features Not Working</h3>
+        <p><strong>Solution:</strong> See the <a href="ai-features.html" style="color:var(--primary);">AI Features page</a> for setup instructions. You need:</p>
+        <ul>
+            <li>A Cerebras API key (sign up at <a href="https://cloud.cerebras.ai" target="_blank" style="color:var(--primary);">cloud.cerebras.ai</a>)</li>
+            <li>The key added as an environment variable: <code>CEREBRAS_API_KEY</code></li>
+            <li>To be in the United States</li>
+        </ul>
+
+        <h3>❌ Still Having Issues?</h3>
+        <p><a href="report.html" style="color:var(--primary);">Report the issue on GitHub</a> with:</p>
+        <ul>
+            <li>Your Windows version</li>
+            <li>Python version (if running from source)</li>
+            <li>Full error message or console output</li>
+            <li>What you were trying to do</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Uninstalling My Toolbox</h2>
+        
+        <h3>If Installed via the Installer</h3>
+        <ol class="steps-list">
+            <li>Press <code>Win</code> and search for <strong>"Control Panel"</strong></li>
+            <li>Go to <strong>Programs</strong> → <strong>Programs and Features</strong></li>
+            <li>Find <strong>"My Toolbox"</strong> in the list</li>
+            <li>Click it and select <strong>"Uninstall"</strong></li>
+            <li>Confirm and wait for uninstall to complete</li>
+        </ol>
+
+        <div class="info-box">
+            💡 Your notes and preferences are stored in <code>%APPDATA%\MyToolbox\data\</code>. They won't be deleted during uninstall if you want to keep them.
+        </div>
+
+        <h3>If Running from Source</h3>
+        <p>Simply delete the folder containing the cloned repository. No cleanup needed.</p>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading setup guide...", "Preparing steps...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download - My Toolbox</title>
+    <meta name="description" content="Download My Toolbox - 21 Professional Desktop Tools for Windows.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#28a745,#1e7e34); color:white; padding:70px 20px; text-align:center; }
+        .page-hero h1 { font-size:42px; margin-bottom:12px; }
+        .page-hero p { font-size:17px; opacity:0.9; }
+
+        .container { max-width:1000px; margin:0 auto; padding:50px 20px; }
+
+        /* DOWNLOAD BOX */
+        .download-box {
+            background: linear-gradient(135deg, var(--secondary), #1e7e34);
+            color:white; padding:40px; border-radius:12px; text-align:center; margin-bottom:30px;
+        }
+        .download-box h2 { font-size:26px; margin-bottom:10px; }
+        .download-box p { margin-bottom:28px; opacity:0.9; }
+
+        .hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+        .btn {
+            padding:13px 30px; border-radius:6px; font-size:16px; font-weight:bold;
+            text-decoration:none; display:inline-block; transition:all 0.2s; cursor:pointer; border:none;
+        }
+        .btn-white { background:white; color:var(--secondary); }
+        .btn-white:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+        .btn-dark { background:#24292e; color:white; }
+        .btn-dark:hover { background:#1a1e22; transform:translateY(-2px); }
+
+        /* NOTE BOX */
+        .note-box { background:white; color:var(--text); padding:28px; border-radius:10px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .note-box h4 { color:var(--primary); margin-bottom:14px; font-size:17px; }
+        .note-box ul { list-style:none; line-height:2.2; font-size:14px; }
+
+        /* REQUIREMENTS */
+        .card { background:white; border-radius:12px; padding:34px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .card h2 { font-size:20px; color:var(--primary); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .req-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+        .req-item { background:var(--light); padding:16px; border-radius:6px; border-left:4px solid var(--primary); font-size:14px; }
+
+        /* STEPS */
+        .steps-list { list-style:none; counter-reset: step; }
+        .steps-list li {
+            counter-increment: step; display:flex; gap:16px; align-items:flex-start;
+            padding:14px 0; border-bottom:1px solid #f0f0f0; font-size:14px; color:#444;
+        }
+        .steps-list li:last-child { border-bottom:none; }
+        .steps-list li::before {
+            content: counter(step); flex-shrink:0; width:28px; height:28px; border-radius:50%;
+            background:var(--primary); color:white; display:flex; align-items:center; justify-content:center;
+            font-weight:bold; font-size:13px;
+        }
+
+        /* LEGAL NOTE */
+        .legal-note { background:#fff3cd; border:1px solid #ffc107; border-left:5px solid #ffc107; border-radius:6px; padding:16px 20px; margin-top:10px; font-size:13px; color:#856404; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+            .loading-title { font-size:26px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">⬇️</span>
+        <h1 class="loading-title">Download</h1>
+        <p class="loading-sub">Preparing your download...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="download.html" class="active">Download</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>⬇️ Download My Toolbox</h1>
+    <p>21 Professional Desktop Tools — free, no installation hassle</p>
+</div>
+
+<div class="container">
+
+    <div class="download-box">
+        <h2>Latest Release: Version 2.0</h2>
+        <p>Single installation file • installation required • All 21 tools included</p>
+        <div class="hero-btns">
+            <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" class="btn btn-white" target="_blank">📥 Download for Windows</a>
+            <a href="releases.html" class="btn btn-dark">📦 View All Releases</a>
+        </div>
+    </div>
+
+    <div class="note-box">
+        <h4>⚠️ Important Notes</h4>
+        <ul>
+            <li>✅ Free and open-source software</li>
+            <li>✅ No malware or spyware</li>
+            <li>✅ No tracking or telemetry</li>
+            <li>✅ No account or registration required</li>
+            <li>⚠️ AI features available in US only</li>
+            <li>ℹ️ Internet required for some features</li>
+            <li>📋 Read the <a href="eula.html" style="color:var(--primary);">EULA</a> before using</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>🚀 Installation Steps</h2>
+        <ul class="steps-list">
+            <li>Click "Download for Windows" above, or grab the installer from the <a href="releases.html" style="color:var(--primary);">Releases</a> page</li>
+            <li>Run <code>MyToolbox-Setup.exe</code> and follow the on-screen prompts</li>
+            <li>If Windows SmartScreen shows a warning, click "More info" → "Run anyway" (this is a known false positive — see <a href="report.html" style="color:var(--primary);">Known Issues</a>)</li>
+            <li>Launch My Toolbox from the Start Menu or Desktop shortcut</li>
+            <li>Pick a theme and start exploring all 21 tools</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>💻 System Requirements</h2>
+        <div class="req-grid">
+            <div class="req-item"><strong>OS:</strong> Windows 10 or later</div>
+            <div class="req-item"><strong>CPU:</strong> Intel Core i5 (2nd Gen) or better</div>
+            <div class="req-item"><strong>RAM:</strong> 4GB minimum</div>
+            <div class="req-item"><strong>Storage:</strong> 500MB free space</div>
+            <div class="req-item"><strong>Internet:</strong> Required for AI & currency tools</div>
+            <div class="req-item"><strong>Architecture:</strong> 64-bit recommended</div>
+        </div>
+        <div class="legal-note">
+            ⚖️ By downloading or using My Toolbox, you agree to the <a href="eula.html" style="color:#856404; text-decoration:underline;">EULA</a> and <a href="terms.html" style="color:#856404; text-decoration:underline;">Terms of Service</a>.
+        </div>
+    </div>
+
+    <div class="card" style="text-align:center;">
+        <h2 style="border:none; text-align:center;">📚 Want the Source Code?</h2>
+        <p style="font-size:14px; color:#666; margin-bottom:20px;">My Toolbox is open-source. Clone the repository, inspect the code, or contribute.</p>
+        <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" target="_blank" class="btn btn-dark">🐙 View on GitHub</a>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Preparing download...", "Checking latest version...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

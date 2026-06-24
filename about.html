@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - My Toolbox</title>
+    <meta name="description" content="About My Toolbox - 21 Professional Desktop Tools, the project, and the developer.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:70px 20px; text-align:center; }
+        .page-hero h1 { font-size:42px; margin-bottom:12px; }
+        .page-hero p { font-size:17px; opacity:0.9; }
+
+        .container { max-width:1000px; margin:0 auto; padding:50px 20px; }
+
+        .card { background:white; border-radius:12px; padding:36px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .card h2 { font-size:22px; color:var(--primary); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .card h3 { font-size:16px; color:var(--text); margin:16px 0 8px; }
+        .card p { font-size:14px; color:#444; margin-bottom:12px; }
+        .card ul { margin:10px 0 14px 22px; font-size:14px; color:#444; }
+        .card li { margin-bottom:6px; }
+
+        /* STATS */
+        .stats-section {
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            color: white; padding:50px 20px; border-radius:12px; margin-bottom:24px;
+        }
+        .stats-section h2 { color:white; text-align:center; font-size:26px; margin-bottom:30px; border:none; padding:0; }
+        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:24px; text-align:center; }
+        .stat-item h3 { font-size:40px; margin-bottom:6px; }
+        .stat-item p { opacity:0.9; font-size:14px; }
+
+        /* TECH BADGES */
+        .tech-badges { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+        .badge { background:var(--light); padding:6px 14px; border-radius:20px; border:1px solid var(--primary); color:var(--primary); font-size:13px; }
+
+        /* DEVELOPER CARD */
+        .dev-card { display:flex; gap:24px; align-items:center; flex-wrap:wrap; }
+        .dev-avatar {
+            width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,#0078d7,#005a9e);
+            display:flex; align-items:center; justify-content:center; font-size:32px; color:white; flex-shrink:0;
+        }
+        .dev-info h3 { margin:0 0 4px; color:var(--primary); }
+        .dev-info p { margin:0; color:#666; font-size:14px; }
+
+        /* CREDITS */
+        .credits-list { list-style:none; font-size:14px; color:#444; }
+        .credits-list li { padding:6px 0; border-bottom:1px solid #f5f5f5; }
+        .credits-list li:last-child { border-bottom:none; }
+
+        /* CTA */
+        .cta-section {
+            background:linear-gradient(135deg, var(--secondary), #1e7e34);
+            color:white; text-align:center; padding:60px 20px; border-radius:12px;
+        }
+        .cta-section h2 { color:white; margin-bottom:14px; font-size:26px; }
+        .cta-section p { opacity:0.9; margin-bottom:24px; font-size:15px; }
+        .btn { padding:12px 26px; border-radius:6px; font-size:15px; font-weight:bold; text-decoration:none; display:inline-block; transition:all 0.2s; margin:0 6px; }
+        .btn-white { background:white; color:var(--secondary); }
+        .btn-white:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+        .btn-outline { border:2px solid white; color:white; background:transparent; }
+        .btn-outline:hover { background:rgba(255,255,255,0.15); }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+            .loading-title { font-size:26px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">👨‍💻</span>
+        <h1 class="loading-title">About</h1>
+        <p class="loading-sub">Loading project info...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="download.html">Download</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>👨‍💻 About This Project</h1>
+    <p>The story, the stats, and the person behind My Toolbox</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>🧰 What is My Toolbox?</h2>
+        <p>My Toolbox is a comprehensive desktop application featuring 21 professional tools designed for everyday productivity, creativity, and system management. Built with Python and PySide6, it provides a modern, intuitive interface with beautiful themes and seamless integration.</p>
+        <p>Whether you need to generate QR codes, manage PDFs, edit images, track time, or explore a vintage Windows collection, My Toolbox brings it all into one place.</p>
+    </div>
+
+    <div class="stats-section">
+        <h2>📊 By The Numbers</h2>
+        <div class="stats-grid">
+            <div class="stat-item"><h3>21</h3><p>Professional Tools</p></div>
+            <div class="stat-item"><h3>5</h3><p>Beautiful Themes</p></div>
+            <div class="stat-item"><h3>∞</h3><p>Possibilities</p></div>
+            <div class="stat-item"><h3>FREE</h3><p>Open Source</p></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>⚙️ Built With Modern Technology</h2>
+        <p>My Toolbox is built entirely in Python, using PySide6 for the interface and a handful of focused libraries for specialized tools.</p>
+        <div class="tech-badges">
+            <span class="badge">Python 3.14</span>
+            <span class="badge">PySide6 6.11.1</span>
+            <span class="badge">Qt Framework</span>
+            <span class="badge">OpenCV</span>
+            <span class="badge">NumPy</span>
+            <span class="badge">PSUtil</span>
+            <span class="badge">Requests</span>
+            <span class="badge">Claude AI</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>👤 Developer</h2>
+        <div class="dev-card">
+            <div class="dev-avatar">🧑‍💻</div>
+            <div class="dev-info">
+                <h3>Tanuj Gunasekara</h3>
+                <p>Sri Lanka 🇱🇰 — Passionate about creating useful tools and exploring retro computing.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🙏 Credits & Acknowledgments</h2>
+        <ul class="credits-list">
+            <li><strong>Built With:</strong> Python 3.14, PySide6 6.11.1</li>
+            <li><strong>Core Libraries:</strong> psutil, opencv-python, numpy, requests</li>
+            <li><strong>Special Thanks:</strong> Cerebras API, Claude AI for debugging help, the Qt Company, the Python community, and vintage Windows collection enthusiasts</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>⚖️ License & Legal</h2>
+        <p>This software is provided as-is. Please read the EULA before using.</p>
+        <p>This software includes assets belonging to Microsoft Corporation for personal, non-commercial use only. Windows® is a registered trademark of Microsoft Corporation. The Developer is not affiliated with or endorsed by Microsoft.</p>
+        <ul>
+            <li><a href="eula.html" style="color:var(--primary);">⚖️ EULA</a></li>
+            <li><a href="privacy.html" style="color:var(--primary);">🔒 Privacy Policy</a></li>
+            <li><a href="terms.html" style="color:var(--primary);">📋 Terms of Service</a></li>
+        </ul>
+    </div>
+
+    <div class="cta-section">
+        <h2>Want to Get Involved?</h2>
+        <p>Try My Toolbox, browse the source, or help improve it</p>
+        <a href="download.html" class="btn btn-white">⬇️ Download</a>
+        <a href="contribute.html" class="btn btn-outline">🤝 Contribute</a>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading project info...", "Gathering stats...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

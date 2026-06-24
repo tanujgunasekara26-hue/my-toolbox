@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - My Toolbox</title>
+    <meta name="description" content="Frequently asked questions about My Toolbox.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:60px 20px; text-align:center; }
+        .page-hero h1 { font-size:38px; margin-bottom:12px; }
+        .page-hero p { font-size:16px; opacity:0.9; }
+
+        .container { max-width:900px; margin:0 auto; padding:50px 20px; }
+
+        /* CATEGORY */
+        .category-title { font-size:22px; color:var(--primary); margin:50px 0 24px 0; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .category-title:first-of-type { margin-top:0; }
+
+        /* FAQ ITEM */
+        .faq-item { background:white; border-radius:10px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.06); overflow:hidden; }
+        .faq-question {
+            padding:20px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+            border-left:4px solid var(--primary); transition:all 0.2s;
+        }
+        .faq-question:hover { background:var(--light); }
+        .faq-question h4 { color:var(--primary); font-size:15px; margin:0; }
+        .faq-icon { font-size:18px; transition:transform 0.3s; }
+        .faq-question.active .faq-icon { transform:rotate(180deg); }
+        .faq-answer { display:none; padding:0 20px 20px 20px; border-top:1px solid var(--border); color:#555; font-size:14px; line-height:1.7; }
+        .faq-answer.show { display:block; }
+        .faq-answer a { color:var(--primary); text-decoration:none; }
+        .faq-answer a:hover { text-decoration:underline; }
+
+        /* INFO BOX */
+        .info-box { background:#e7f3ff; border:1px solid #b3d9ff; border-left:4px solid var(--primary); border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#004085; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">❓</span>
+        <h1 class="loading-title">FAQ</h1>
+        <p class="loading-sub">Loading questions & answers...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="documentation.html">Docs</a></li>
+            <li><a href="report.html">Report</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>❓ FAQ</h1>
+    <p>Frequently asked questions about My Toolbox</p>
+</div>
+
+<div class="container">
+
+    <div class="info-box">
+        💡 Click any question below to expand the answer. Can't find what you're looking for? Check the <a href="troubleshooting.html" style="color:var(--primary);">Troubleshooting page</a> or <a href="report.html" style="color:var(--primary);">report an issue</a>.
+    </div>
+
+    <!-- GENERAL -->
+    <div class="category-title">📋 General Questions</div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>What is My Toolbox?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            My Toolbox is a free, open-source desktop application for Windows that bundles 21 professional tools into one place. It includes AI chatbot, PDF tools, image editor, unit converter, password generator, timer, and much more — all in a beautiful, modern interface.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How much does My Toolbox cost?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            My Toolbox is completely free. No subscription, no ads, no paywalls. You can download it and use it forever without paying anything.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Is My Toolbox open-source?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Yes! My Toolbox is open-source under the MIT License. You can view the source code, audit it for security, and contribute improvements on <a href="https://github.com" target="_blank">GitHub</a>.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Does My Toolbox track or monitor me?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            No. My Toolbox has zero tracking, zero telemetry, and zero analytics. We have no way to know what you do or who you are. Your data stays on your computer.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Does My Toolbox require an account?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            No account needed. Install, open, and start using all 21 tools immediately. The only exception is if you want to use AI features — you'll need a free Cerebras API key.
+        </div>
+    </div>
+
+    <!-- INSTALLATION -->
+    <div class="category-title">💾 Installation & Setup</div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>What are the system requirements?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            <strong>Minimum:</strong> Windows 10 or later, Intel Core i5 (2nd Gen) or better, 8GB RAM, 500MB free disk space.<br><br><strong>Recommended:</strong> Windows 11, Intel Core i7 or better, 16GB RAM, 1GB free disk space.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I run My Toolbox on macOS or Linux?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Currently, My Toolbox is Windows-only. macOS and Linux support are planned for future versions. You can run from source on any platform, but the compiled installer is Windows-only.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How do I install My Toolbox?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Download the installer from the <a href="download.html">Download page</a>, run it, follow the prompts, and you're done. Takes about 2 minutes. See the <a href="installation.html">Installation Guide</a> for detailed instructions.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I run My Toolbox from a USB drive?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Not yet (planned for future versions). Currently, you need to install it on your computer. You can copy the installation folder to a USB drive, but it may not work without proper installation.
+        </div>
+    </div>
+
+    <!-- TOOLS & FEATURES -->
+    <div class="category-title">🛠️ Tools & Features</div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>What are all 21 tools?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            See the <a href="tools.html">Tools page</a> for a complete list with descriptions. Categories include AI & Writing, Conversion, Utilities, Productivity, Media, Business, and System tools.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I use tools offline?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Most tools work offline (Calculator, Timer, Stopwatch, Notes, Password Generator, Image Tools, etc.). Only AI Chatbot, AI Writing Tools, and Currency Converter require internet.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I add my own tools?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            The app doesn't support plugins yet, but you can contribute new tools to the GitHub repository. See <a href="contribute.html">Contributing</a> for guidelines.
+        </div>
+    </div>
+
+    <!-- AI FEATURES -->
+    <div class="category-title">🤖 AI Features</div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How do I set up AI features?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            You need a free Cerebras API key. Sign up at <a href="https://cloud.cerebras.ai" target="_blank">cloud.cerebras.ai</a>, generate a key, and set it as the <code>CEREBRAS_API_KEY</code> environment variable. See <a href="cerebras-setup.html">Setting Up Cerebras AI</a> for step-by-step instructions.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Are AI features free?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Yes! Cerebras offers a generous free tier. Most casual users won't exceed it. You only pay if you make thousands of API calls per month.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Where do I get a Cerebras API key?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Go to <a href="https://cloud.cerebras.ai" target="_blank">cloud.cerebras.ai</a>, create a free account, navigate to API Keys, and generate one. It takes 2 minutes. See <a href="cerebras-setup.html">Setting Up Cerebras AI</a> for details.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I use AI features outside the US?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            No. AI features are restricted to users in the United States due to export regulations. There's no workaround — this is enforced at the API level. All other 19 tools work fine anywhere.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Is my data safe with Cerebras?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Cerebras logs interactions for service improvement. Your prompts are never used for training without consent. See <a href="https://cerebras.ai/privacy" target="_blank">Cerebras's Privacy Policy</a> and our <a href="privacy.html">Privacy Policy</a> for details.
+        </div>
+    </div>
+
+    <!-- DATA & PRIVACY -->
+    <div class="category-title">🔒 Data & Privacy</div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Where does My Toolbox store my data?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            All data is stored locally on your computer in <code>%APPDATA%\MyToolbox\data\</code>. This folder contains your notes, settings, and preferences. See <a href="data-storage.html">Data & Storage</a> for full details.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I back up my notes?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Yes. Copy <code>%APPDATA%\MyToolbox\data\notes.txt</code> to any safe location (USB drive, cloud storage, external drive). This is a plaintext file you can open with any text editor.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Is my data encrypted?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Not currently — data is stored as plaintext, protected only by Windows file permissions. Encryption is planned for future versions. For now, use Windows password protection on your user account.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I move the data folder?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Not yet. The data folder is always in <code>%APPDATA%\MyToolbox</code>. This feature is planned for future versions.
+        </div>
+    </div>
+
+    <!-- THEMES & CUSTOMIZATION -->
+    <div class="category-title">🎨 Themes & Customization</div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How do I change the theme?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Click Settings (⚙️) → Appearance → Theme → Select a theme → Apply. Changes apply instantly. See <a href="themes.html">Themes</a> for details on all 5 themes.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How many themes are there?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            5 themes: Light, Dark, Blue, Green, and Purple. Each has been professionally designed and tested for readability and aesthetics.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I create custom themes?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Not yet through the UI, but since My Toolbox is open-source, you can modify the theme files and recompile. Check <a href="contribute.html">Contributing</a> for guidelines.
+        </div>
+    </div>
+
+    <!-- UPDATES & SUPPORT -->
+    <div class="category-title">📦 Updates & Support</div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How do I update My Toolbox?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Download the latest installer from <a href="download.html">the Download page</a> or <a href="https://github.com" target="_blank">GitHub Releases</a> and run it over your existing installation. Your notes and settings are preserved.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How often are updates released?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Updates are released when features are ready and bugs are fixed. There's no fixed schedule. Enable auto-check in Settings to be notified of new versions.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>I found a bug. How do I report it?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Go to <a href="report.html">the Report Issues page</a>, describe the problem, and submit via GitHub. Include your OS version, My Toolbox version, and steps to reproduce.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>I have a feature request. What should I do?</h4>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            Open a GitHub issue with the title "Feature Request:" and describe your idea. Check existing issues first to avoid duplicates. See <a href="https://github.com" target="_blank">GitHub</a>.
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading questions...", "Gathering answers...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+
+    function toggleFAQ(element) {
+        const question = element;
+        const answer = element.nextElementSibling;
+        
+        question.classList.toggle('active');
+        answer.classList.toggle('show');
+    }
+</script>
+</body>
+</html>

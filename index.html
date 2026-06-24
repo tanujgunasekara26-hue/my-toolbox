@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Toolbox - 21 Professional Desktop Tools</title>
+    <meta name="description" content="My Toolbox: 21 professional desktop tools including AI, PDF, image editing, QR codes, and retro Windows experience.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            scroll-behavior: smooth;
+        }
+
+        /* ═══════════════════════════════════
+           LOADING SCREEN
+        ═══════════════════════════════════ */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+
+        #loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-box {
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+
+        .loading-emoji {
+            font-size: 100px;
+            display: block;
+            animation: bounce 1.5s infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-title {
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            font-size: 16px;
+            opacity: 0.85;
+            margin-bottom: 40px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        .progress-wrap {
+            width: 280px;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            margin: 0 auto 16px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: white;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .loading-msg {
+            font-size: 13px;
+            opacity: 0.75;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-18px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══════════════════════════════════
+           MAIN CONTENT
+        ═══════════════════════════════════ */
+        #main-content {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* NAV */
+        header {
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            color: white;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 22px; font-weight: bold; }
+
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover { opacity: 1; }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero h1 { font-size: 48px; margin-bottom: 16px; }
+        .hero p { font-size: 20px; opacity: 0.9; margin-bottom: 36px; }
+
+        .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+        .btn {
+            padding: 13px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-white { background: white; color: var(--primary); }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        .btn-green { background: var(--secondary); color: white; }
+        .btn-green:hover { background: #218838; transform: translateY(-2px); }
+
+        /* CONTAINER */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        section { padding: 80px 20px; }
+
+        section > .container > h2,
+        section h2 {
+            font-size: 34px;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        /* FEATURES */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover { transform: translateY(-8px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .feature-icon { font-size: 38px; margin-bottom: 14px; }
+        .feature-card h3 { color: var(--primary); margin-bottom: 10px; }
+        .feature-card p { color: #666; font-size: 14px; }
+
+        /* TOOLS */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .tool-item {
+            background: var(--light);
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .tool-item h4 { color: var(--primary); margin-bottom: 6px; }
+        .tool-item p { font-size: 13px; color: #666; }
+
+        /* STATS */
+        .stats-section {
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            color: white;
+            padding: 60px 20px;
+        }
+
+        .stats-section h2 { color: white; text-align: center; font-size: 34px; margin-bottom: 40px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item h3 { font-size: 48px; margin-bottom: 8px; }
+        .stat-item p { opacity: 0.9; font-size: 16px; }
+
+        /* TECH */
+        .tech-box {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .tech-box h3 { color: var(--primary); margin-bottom: 16px; }
+
+        .tech-badges { display: flex; flex-wrap: wrap; gap: 12px; }
+
+        .badge {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        /* DOWNLOAD */
+        .download-section {
+            background: linear-gradient(135deg, var(--secondary), #1e7e34);
+            color: white;
+            padding: 80px 20px;
+        }
+
+        .download-section h2 { color: white; text-align: center; font-size: 34px; margin-bottom: 40px; }
+
+        .download-box {
+            background: rgba(255,255,255,0.15);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .download-box h3 { font-size: 24px; margin-bottom: 12px; }
+        .download-box p { margin-bottom: 28px; opacity: 0.9; }
+
+        .note-box {
+            background: white;
+            color: var(--text);
+            padding: 28px;
+            border-radius: 10px;
+        }
+
+        .note-box h4 { color: var(--primary); margin-bottom: 14px; }
+        .note-box ul { list-style: none; line-height: 2.2; }
+
+        /* REQUIREMENTS */
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .req-item {
+            background: var(--light);
+            padding: 16px;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary);
+            font-size: 14px;
+        }
+
+        /* ABOUT */
+        .about-box {
+            background: var(--light);
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        .about-box h3 { color: var(--primary); font-size: 20px; margin-bottom: 14px; }
+        .about-box p { margin-bottom: 24px; color: #444; line-height: 1.8; }
+
+        /* FOOTER */
+        footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 50px 20px 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-col h4 { color: var(--primary); margin-bottom: 14px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 8px; }
+        .footer-col a { color: #aaa; text-decoration: none; transition: color 0.2s; }
+        .footer-col a:hover { color: white; }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            text-align: center;
+            color: #aaa;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom p { margin-bottom: 6px; font-size: 14px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 30px; }
+            .hero p { font-size: 16px; }
+            .nav-links { gap: 16px; font-size: 13px; }
+            .loading-title { font-size: 28px; }
+            .loading-emoji { font-size: 70px; }
+            .hero-btns { flex-direction: column; align-items: center; }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ -->
+<!--           LOADING SCREEN           -->
+<!-- ═══════════════════════════════════ -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">🧰</span>
+        <h1 class="loading-title">My Toolbox</h1>
+        <p class="loading-subtitle">21 Professional Desktop Tools</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p class="loading-msg" id="loading-msg">Initializing...</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!--           MAIN CONTENT             -->
+<!-- ═══════════════════════════════════ -->
+<div id="main-content">
+
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <div class="logo">🧰 My Toolbox</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="tools.html">Tools</a></li>
+                <li><a href="releases.html">Releases</a></li>
+                <li><a href="download.html">Download</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>🧰 My Toolbox</h1>
+        <p>A Comprehensive Collection of 21 Professional Desktop Tools</p>
+        <div class="hero-btns">
+            <a href="download.html" class="btn btn-white">⬇️ Download Now</a>
+            <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" class="btn btn-green" target="_blank">⭐ View on GitHub</a>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features">
+        <div class="container">
+            <h2>✨ Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Tools</h3>
+                    <p>Chat with Cerebras AI for writing assistance, grammar checking, paraphrasing, and content generation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3>PDF Management</h3>
+                    <p>Merge, split, extract, and watermark PDFs with ease. Professional PDF tools built-in.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>Retro Windows</h3>
+                    <p>Experience Windows XP/Vista sounds, wallpapers, and a complete retro computing experience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🖼️</div>
+                    <h3>Image Editing</h3>
+                    <p>Resize, crop, convert formats, and apply effects to images with batch processing support.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💱</div>
+                    <h3>Real-Time Conversion</h3>
+                    <p>Convert currencies with live exchange rates, units, and temperatures instantly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🖥️</div>
+                    <h3>System Monitoring</h3>
+                    <p>Monitor CPU, RAM, storage, and network status with detailed real-time information.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section id="tools" style="background: var(--light);">
+        <div class="container">
+            <h2>🛠️ All 21 Tools</h2>
+            <div class="tools-grid">
+                <div class="tool-item"><h4>🤖 AI Chatbot</h4><p>Chat with Cerebras AI for questions and writing help.</p></div>
+                <div class="tool-item"><h4>✍️ AI Writing Tools</h4><p>Grammar, tone, summarization, and paraphrasing.</p></div>
+                <div class="tool-item"><h4>🧮 Calculator</h4><p>Safe math expression evaluator for complex calculations.</p></div>
+                <div class="tool-item"><h4>📐 Unit Converter</h4><p>7 categories: length, weight, temperature, and more.</p></div>
+                <div class="tool-item"><h4>💱 Currency Converter</h4><p>Real-time rates from 40+ currencies worldwide.</p></div>
+                <div class="tool-item"><h4>🔑 Password Generator</h4><p>Generate strong, secure passwords instantly.</p></div>
+                <div class="tool-item"><h4>📝 Notes</h4><p>Quick note-taking with save/load and word counter.</p></div>
+                <div class="tool-item"><h4>⏱️ Timer</h4><p>Countdown timer with visual progress ring and alerts.</p></div>
+                <div class="tool-item"><h4>⏲️ Stopwatch</h4><p>Precise stopwatch with lap timing and split analysis.</p></div>
+                <div class="tool-item"><h4>📷 QR Generator</h4><p>Generate QR codes from any text or URL.</p></div>
+                <div class="tool-item"><h4>🔍 QR Scanner</h4><p>Scan QR codes from images or live webcam.</p></div>
+                <div class="tool-item"><h4>📄 PDF Tools</h4><p>Merge, split, extract pages, and watermark PDFs.</p></div>
+                <div class="tool-item"><h4>🖼️ Image Tools</h4><p>Resize, crop, convert formats, and apply effects.</p></div>
+                <div class="tool-item"><h4>📝 Text Tools</h4><p>Case conversion, word count, and text analysis.</p></div>
+                <div class="tool-item"><h4>⚡ Productivity Tools</h4><p>Pomodoro timer, todo lists, and habits tracker.</p></div>
+                <div class="tool-item"><h4>💼 Business Tools</h4><p>Invoice generator and expense tracker.</p></div>
+                <div class="tool-item"><h4>👨‍💻 Developer Tools</h4><p>JSON formatter, color converter, and regex tester.</p></div>
+                <div class="tool-item"><h4>📚 Educational Tools</h4><p>Flashcard maker, study timer, and quizzes.</p></div>
+                <div class="tool-item"><h4>💰 Financial Tools</h4><p>Loan calculator and investment analyzer.</p></div>
+                <div class="tool-item"><h4>🎵 Retro Windows</h4><p>Windows XP/Vista experience with sounds and wallpapers.</p></div>
+                <div class="tool-item"><h4>🖥️ System Info</h4><p>Monitor CPU, RAM, storage, and network in real-time.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <h2>📊 By The Numbers</h2>
+        <div class="stats-grid">
+            <div class="stat-item"><h3>21</h3><p>Professional Tools</p></div>
+            <div class="stat-item"><h3>5</h3><p>Beautiful Themes</p></div>
+            <div class="stat-item"><h3>∞</h3><p>Possibilities</p></div>
+            <div class="stat-item"><h3>FREE</h3><p>Open Source</p></div>
+        </div>
+    </section>
+
+    <!-- TECH -->
+    <section>
+        <div class="container">
+            <h2>⚙️ Built With Modern Technology</h2>
+            <div class="tech-box">
+                <h3>Technology Stack</h3>
+                <div class="tech-badges">
+                    <span class="badge">Python 3.14</span>
+                    <span class="badge">PySide6 6.11.1</span>
+                    <span class="badge">Qt Framework</span>
+                    <span class="badge">OpenCV</span>
+                    <span class="badge">NumPy</span>
+                    <span class="badge">PSUtil</span>
+                    <span class="badge">Requests</span>
+                    <span class="badge">Cerebras AI</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REQUIREMENTS -->
+    <section style="background: var(--light);">
+        <div class="container">
+            <h2>💻 System Requirements</h2>
+            <div class="req-grid">
+                <div class="req-item"><strong>OS:</strong> Windows 10 or later</div>
+                <div class="req-item"><strong>CPU:</strong> Intel Core i5 (2nd Gen) or better</div>
+                <div class="req-item"><strong>RAM:</strong> 4GB minimum</div>
+                <div class="req-item"><strong>Storage:</strong> 500MB free space</div>
+                <div class="req-item"><strong>Internet:</strong> Required for AI & currency</div>
+                <div class="req-item"><strong>Architecture:</strong> 64-bit recommended</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOWNLOAD -->
+    <section class="download-section" id="download">
+        <div class="container">
+            <h2>⬇️ Download My Toolbox</h2>
+            <div class="download-box">
+                <h3>Latest Release: Version 2.0</h3>
+                <p>Single installation file • installation required • All 21 tools included</p>
+                <div class="hero-btns">
+                    <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" class="btn btn-white" target="_blank">📥 Download for Windows</a>
+                    <a href="releases.html" class="btn btn-green">⭐ View Releases</a>
+                </div>
+            </div>
+            <div class="note-box">
+                <h4>⚠️ Important Notes</h4>
+                <ul>
+                    <li>✅ Free and open-source software</li>
+                    <li>✅ No malware or spyware</li>
+                    <li>✅ No tracking or telemetry</li>
+                    <li>✅ No account or registration required</li>
+                    <li>⚠️ AI features available in US only</li>
+                    <li>ℹ️ Internet required for some features</li>
+                    <li>📋 Read the EULA before using</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="container">
+            <h2>👨‍💻 About This Project</h2>
+            <div class="about-box">
+                <h3>What is My Toolbox?</h3>
+                <p>My Toolbox is a comprehensive desktop application featuring 21 professional tools designed for everyday productivity, creativity, and system management. Built with Python and PySide6, it provides a modern, intuitive interface with beautiful themes and seamless integration.</p>
+
+                <h3>Developer</h3>
+                <p><strong>Tanuj Gunasekara</strong> from Sri Lanka 🇱🇰<br>
+                Passionate about creating useful tools and exploring retro computing.</p>
+
+                <h3>License & Legal</h3>
+                <p>This software is provided as-is. Please read the EULA before using.<br>
+                This software includes assets belonging to Microsoft Corporation for personal, non-commercial use only.<br>
+                Windows® is a registered trademark of Microsoft Corporation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>🧰 My Toolbox</h4>
+                <ul>
+                    <li><a href="features.html">✨ Features</a></li>
+                    <li><a href="tools.html">🛠️ Tools</a></li>
+                    <li><a href="download.html">⬇️ Download</a></li>
+                    <li><a href="about.html">👨‍💻 About</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>📚 Resources</h4>
+                <ul>
+                    <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                    <li><a href="documentation.html">📚 Documentation</a></li>
+                    <li><a href="contribute.html">🤝 Contribute</a></li>
+                    <li><a href="report.html">🐛 Report Issues</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>⚖️ Legal</h4>
+                <ul>
+                    <li><a href="eula.html">⚖️ EULA</a></li>
+                    <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                    <li><a href="terms.html">📋 Terms of Service</a></li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+            <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+        </div>
+    </footer>
+
+</div><!-- end #main-content -->
+
+<script>
+    const messages = [
+        "Initializing...",
+        "Loading tools...",
+        "Setting up interface...",
+        "Configuring themes...",
+        "Almost ready...",
+        "Ready! 🎉"
+    ];
+
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+
+    // Increment progress smoothly
+    const interval = setInterval(() => {
+        progress += 15;
+        if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 20)] || messages[4];
+    }, 200);
+
+    // On window load, complete and hide
+    window.addEventListener('load', () => {
+        clearInterval(interval);
+        fill.style.width = '100%';
+        msg.textContent = 'Ready! 🎉';
+
+        setTimeout(() => {
+            const screen = document.getElementById('loading-screen');
+            const main = document.getElementById('main-content');
+            screen.classList.add('fade-out');
+            main.style.display = 'block';
+            setTimeout(() => { screen.style.display = 'none'; }, 600);
+        }, 600);
+    });
+</script>
+
+</body>
+</html>

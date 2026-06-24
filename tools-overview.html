@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools Overview - My Toolbox</title>
+    <meta name="description" content="Detailed overview of all 21 tools in My Toolbox.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:60px 20px; text-align:center; }
+        .page-hero h1 { font-size:38px; margin-bottom:12px; }
+        .page-hero p { font-size:16px; opacity:0.9; }
+
+        .container { max-width:1000px; margin:0 auto; padding:50px 20px; }
+
+        /* CATEGORY */
+        .category-header { font-size:22px; color:var(--primary); margin:50px 0 24px 0; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .category-header:first-of-type { margin-top:0; }
+
+        /* TOOL CARDS */
+        .tool-card {
+            background:white; border-radius:10px; padding:22px; box-shadow:0 2px 10px rgba(0,0,0,0.08);
+            border-left:4px solid var(--primary); margin-bottom:16px; transition:all 0.2s;
+        }
+        .tool-card:hover { transform:translateX(4px); box-shadow:0 4px 16px rgba(0,0,0,0.12); }
+        .tool-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+        .tool-icon { font-size:28px; }
+        .tool-header h3 { color:var(--primary); margin:0; font-size:16px; }
+        .tool-desc { color:#555; font-size:13px; margin-bottom:10px; line-height:1.6; }
+        .tool-features { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+        .feature-tag { background:var(--light); border:1px solid var(--border); padding:4px 10px; border-radius:12px; font-size:12px; color:#666; }
+
+        /* INFO BOX */
+        .info-box { background:#e7f3ff; border:1px solid #b3d9ff; border-left:4px solid var(--primary); border-radius:6px; padding:16px; margin:20px 0; font-size:13px; color:#004085; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+            .tool-header { flex-direction:column; align-items:flex-start; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">🛠️</span>
+        <h1 class="loading-title">Tools Overview</h1>
+        <p class="loading-sub">Loading tool details...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="documentation.html">Docs</a></li>
+            <li><a href="report.html">Report</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>🛠️ Tools Overview</h1>
+    <p>Detailed breakdown of all 21 professional tools</p>
+</div>
+
+<div class="container">
+
+    <div class="info-box">
+        💡 This page provides in-depth information about every tool in My Toolbox. For a quick overview, see the <a href="tools.html" style="color:var(--primary);">Tools page</a>.
+    </div>
+
+    <!-- AI TOOLS -->
+    <div class="category-header">🤖 AI & Writing (2 Tools)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🤖</span><h3>AI Chatbot</h3></div>
+        <p class="tool-desc">Chat with Claude AI powered by the Cerebras API. Ask questions, get coding help, brainstorm ideas, or discuss complex topics with an intelligent AI assistant.</p>
+        <div class="tool-features">
+            <span class="feature-tag">AI-Powered</span>
+            <span class="feature-tag">Cerebras API</span>
+            <span class="feature-tag">US Only</span>
+            <span class="feature-tag">Internet Required</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">✍️</span><h3>AI Writing Tools</h3></div>
+        <p class="tool-desc">AI-assisted writing utilities including grammar checking, tone adjustment, summarization, paraphrasing, and content generation. Perfect for emails, essays, articles, and more.</p>
+        <div class="tool-features">
+            <span class="feature-tag">AI-Powered</span>
+            <span class="feature-tag">Grammar Check</span>
+            <span class="feature-tag">Paraphrase</span>
+            <span class="feature-tag">US Only</span>
+        </div>
+    </div>
+
+    <!-- CONVERSION TOOLS -->
+    <div class="category-header">💱 Conversion & Calculation (3 Tools)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🧮</span><h3>Calculator</h3></div>
+        <p class="tool-desc">Safe, AST-based math expression evaluator. Calculate complex equations, scientific operations, and more without risk of injection attacks. Supports standard operators and functions.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Math</span>
+            <span class="feature-tag">Offline</span>
+            <span class="feature-tag">Safe Evaluation</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">📐</span><h3>Unit Converter</h3></div>
+        <p class="tool-desc">Convert measurements across 7 categories: Length (cm, inches, feet, meters), Weight (g, kg, oz, lb), Temperature (°C, °F, K), Speed, Area, Volume, and Data (bytes, MB, GB).</p>
+        <div class="tool-features">
+            <span class="feature-tag">7 Categories</span>
+            <span class="feature-tag">Offline</span>
+            <span class="feature-tag">Instant</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">💱</span><h3>Currency Converter</h3></div>
+        <p class="tool-desc">Real-time currency exchange rates from the Frankfurter API. Convert between 40+ currencies worldwide with live, accurate rates updated daily.</p>
+        <div class="tool-features">
+            <span class="feature-tag">40+ Currencies</span>
+            <span class="feature-tag">Live Rates</span>
+            <span class="feature-tag">Internet Required</span>
+        </div>
+    </div>
+
+    <!-- UTILITY TOOLS -->
+    <div class="category-header">🔧 Utilities (4 Tools)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🔑</span><h3>Password Generator</h3></div>
+        <p class="tool-desc">Generate strong, cryptographically secure passwords. Customize length, character sets (uppercase, lowercase, numbers, symbols), and get real-time strength analysis.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Secure</span>
+            <span class="feature-tag">Customizable</span>
+            <span class="feature-tag">Strength Meter</span>
+            <span class="feature-tag">Offline</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">📝</span><h3>Text Tools</h3></div>
+        <p class="tool-desc">Text processing utilities including case conversion (UPPER, lower, Title Case), word/character counting, line manipulation, and text analysis.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Text Processing</span>
+            <span class="feature-tag">Case Conversion</span>
+            <span class="feature-tag">Analysis</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">👨‍💻</span><h3>Developer Tools</h3></div>
+        <p class="tool-desc">A suite of developer utilities: JSON formatter & validator, color converter (HEX/RGB/HSL), code snippet manager, regular expression tester, and base64 encoder/decoder.</p>
+        <div class="tool-features">
+            <span class="feature-tag">JSON Formatter</span>
+            <span class="feature-tag">Color Tools</span>
+            <span class="feature-tag">Regex Tester</span>
+            <span class="feature-tag">Base64</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🔐</span><h3>Encryption & Hashing</h3></div>
+        <p class="tool-desc">Secure data utilities including text encryption/decryption, hash generation (MD5, SHA-256), and checksum verification for data integrity.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Encryption</span>
+            <span class="feature-tag">Hashing</span>
+            <span class="feature-tag">Offline</span>
+            <span class="feature-tag">Secure</span>
+        </div>
+    </div>
+
+    <!-- PRODUCTIVITY TOOLS -->
+    <div class="category-header">⏱️ Productivity (4 Tools)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">📝</span><h3>Notes</h3></div>
+        <p class="tool-desc">Lightweight note-taking tool. Write quick notes, save/load from disk, get real-time character and word counts. Perfect for quick ideas and scratchpads.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Plaintext</span>
+            <span class="feature-tag">Save/Load</span>
+            <span class="feature-tag">Offline</span>
+            <span class="feature-tag">Character Count</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">⏱️</span><h3>Timer</h3></div>
+        <p class="tool-desc">Countdown timer with visual progress ring. Set hours, minutes, and seconds. Get alerts when time's up, perfect for cooking, studying, or time-boxed work.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Countdown</span>
+            <span class="feature-tag">Visual Ring</span>
+            <span class="feature-tag">Alerts</span>
+            <span class="feature-tag">Offline</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">⏲️</span><h3>Stopwatch</h3></div>
+        <p class="tool-desc">High-precision stopwatch for tracking elapsed time. Record lap times, analyze splits, and monitor performance. Accurate to milliseconds.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Stopwatch</span>
+            <span class="feature-tag">Lap Timing</span>
+            <span class="feature-tag">Offline</span>
+            <span class="feature-tag">Precision</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">⚡</span><h3>Productivity Suite</h3></div>
+        <p class="tool-desc">Integrated productivity tools including Pomodoro timer, to-do list manager, habit tracker, and focus mode. Build better work habits and stay productive.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Pomodoro</span>
+            <span class="feature-tag">To-Do List</span>
+            <span class="feature-tag">Habit Tracker</span>
+            <span class="feature-tag">Focus Mode</span>
+        </div>
+    </div>
+
+    <!-- MEDIA TOOLS -->
+    <div class="category-header">🖼️ Media & Files (5 Tools)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">📷</span><h3>QR Generator</h3></div>
+        <p class="tool-desc">Generate professional QR codes from text, URLs, or any data. Download as PNG or print directly. Perfect for contact info, WiFi, or marketing materials.</p>
+        <div class="tool-features">
+            <span class="feature-tag">QR Generation</span>
+            <span class="feature-tag">Export PNG</span>
+            <span class="feature-tag">Print Ready</span>
+            <span class="feature-tag">Offline</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🔍</span><h3>QR Scanner</h3></div>
+        <p class="tool-desc">Scan QR codes from images or live webcam. Instant decoding with history tracking. Works offline and supports batch scanning of multiple codes.</p>
+        <div class="tool-features">
+            <span class="feature-tag">QR Scanning</span>
+            <span class="feature-tag">Webcam Support</span>
+            <span class="feature-tag">History</span>
+            <span class="feature-tag">OpenCV</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">📄</span><h3>PDF Tools</h3></div>
+        <p class="tool-desc">Professional PDF manipulation suite. Merge multiple PDFs, split pages, extract specific pages, add watermarks, and convert between formats.</p>
+        <div class="tool-features">
+            <span class="feature-tag">PDF Merge</span>
+            <span class="feature-tag">PDF Split</span>
+            <span class="feature-tag">Watermark</span>
+            <span class="feature-tag">Offline</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🖼️</span><h3>Image Tools</h3></div>
+        <p class="tool-desc">Comprehensive image editor. Resize, crop, rotate, flip, convert formats (PNG/JPG/BMP/GIF). Batch processing for multiple images at once.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Image Editing</span>
+            <span class="feature-tag">Batch Processing</span>
+            <span class="feature-tag">Format Convert</span>
+            <span class="feature-tag">OpenCV</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🎵</span><h3>Retro Windows</h3></div>
+        <p class="tool-desc">Experience Windows XP & Vista nostalgia. Play classic sounds, browse retro wallpapers, and explore sample media files from the golden age of Windows.</p>
+        <div class="tool-features">
+            <span class="feature-tag">XP/Vista Sounds</span>
+            <span class="feature-tag">Wallpapers</span>
+            <span class="feature-tag">Nostalgia</span>
+            <span class="feature-tag">Personal Use Only</span>
+        </div>
+    </div>
+
+    <!-- BUSINESS & EDUCATION -->
+    <div class="category-header">💼 Business & Education (2 Tools)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">💼</span><h3>Business Tools</h3></div>
+        <p class="tool-desc">Business utilities including invoice generator, expense tracker, proposal templates, and invoice templates. Streamline business operations and reduce paperwork.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Invoice Generator</span>
+            <span class="feature-tag">Expense Tracking</span>
+            <span class="feature-tag">Templates</span>
+            <span class="feature-tag">Export</span>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">📚</span><h3>Educational Tools</h3></div>
+        <p class="tool-desc">Learning utilities including flashcard maker, study timer, vocabulary builder, and quiz generator. Perfect for students and self-learners.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Flashcards</span>
+            <span class="feature-tag">Study Timer</span>
+            <span class="feature-tag">Vocabulary</span>
+            <span class="feature-tag">Quizzes</span>
+        </div>
+    </div>
+
+    <!-- FINANCIAL TOOLS -->
+    <div class="category-header">💰 Financial (1 Tool)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">💰</span><h3>Financial Calculators</h3></div>
+        <p class="tool-desc">Suite of financial tools including loan calculator, investment analyzer, compound interest calculator, and budget planner. Make informed financial decisions.</p>
+        <div class="tool-features">
+            <span class="feature-tag">Loan Calculator</span>
+            <span class="feature-tag">Investment Analysis</span>
+            <span class="feature-tag">Interest Calculator</span>
+            <span class="feature-tag">Budget Planner</span>
+        </div>
+    </div>
+
+    <!-- SYSTEM TOOLS -->
+    <div class="category-header">🖥️ System & Monitoring (1 Tool)</div>
+
+    <div class="tool-card">
+        <div class="tool-header"><span class="tool-icon">🖥️</span><h3>System Info</h3></div>
+        <p class="tool-desc">Real-time system information viewer. Monitor CPU, RAM, storage usage, network status, processes, and performance metrics. Diagnose system health.</p>
+        <div class="tool-features">
+            <span class="feature-tag">CPU Monitor</span>
+            <span class="feature-tag">RAM Usage</span>
+            <span class="feature-tag">Network Stats</span>
+            <span class="feature-tag">psutil</span>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading tool details...", "Cataloging tools...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

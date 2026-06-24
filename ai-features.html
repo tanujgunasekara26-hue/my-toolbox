@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Features - My Toolbox</title>
+    <meta name="description" content="Explore AI-powered features in My Toolbox.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:60px 20px; text-align:center; }
+        .page-hero h1 { font-size:38px; margin-bottom:12px; }
+        .page-hero p { font-size:16px; opacity:0.9; }
+
+        .container { max-width:900px; margin:0 auto; padding:50px 20px; }
+
+        .card { background:white; border-radius:12px; padding:30px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .card h2 { font-size:20px; color:var(--primary); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .card h3 { font-size:16px; color:var(--text); margin:20px 0 10px; }
+        .card p { font-size:14px; color:#444; margin-bottom:12px; }
+        .card ol, .card ul { margin:10px 0 14px 22px; font-size:14px; color:#444; }
+        .card li { margin-bottom:8px; line-height:1.8; }
+
+        /* FEATURE GRID */
+        .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:14px 0; }
+        .feature-item { background:var(--light); padding:18px; border-radius:8px; border-left:4px solid var(--primary); }
+        .feature-item h4 { color:var(--primary); margin-bottom:8px; font-size:14px; }
+        .feature-item p { font-size:13px; color:#666; }
+
+        /* INFO BOX */
+        .info-box { background:#e7f3ff; border:1px solid #b3d9ff; border-left:4px solid var(--primary); border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#004085; }
+        .warning-box { background:#fff3cd; border:1px solid #ffc107; border-left:4px solid #ffc107; border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#856404; }
+
+        /* CAPABILITY TABLE */
+        .capability-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:10px; }
+        .capability-table th { background:var(--light); padding:12px; text-align:left; border-bottom:2px solid var(--primary); font-weight:bold; color:var(--primary); }
+        .capability-table td { padding:12px; border-bottom:1px solid var(--border); }
+        .capability-table tr:hover { background:#fafafa; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">🤖</span>
+        <h1 class="loading-title">AI Features</h1>
+        <p class="loading-sub">Loading AI info...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="documentation.html">Docs</a></li>
+            <li><a href="report.html">Report</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>🤖 AI Features</h1>
+    <p>Powered by Cerebras API — Intelligent Tools for Smart Work</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>What Are AI Features?</h2>
+        <p>My Toolbox includes two AI-powered tools built on the Cerebras API, giving you access to Claude AI directly in your desktop application. These tools help with writing, brainstorming, coding, analysis, and much more.</p>
+        
+        <h3>The Two AI Tools</h3>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <h4>🤖 AI Chatbot</h4>
+                <p>Chat with Cerebras AI. Ask questions, get advice, brainstorm ideas, write code, analyze data, or just have a conversation.</p>
+            </div>
+            <div class="feature-item">
+                <h4>✍️ AI Writing Tools</h4>
+                <p>Smart writing assistance including grammar checking, tone adjustment, summarization, paraphrasing, and content generation.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>AI Chatbot Capabilities</h2>
+        <p>The AI Chatbot allows you to have free-form conversations with Claude AI. Here's what you can ask it to do:</p>
+        
+        <table class="capability-table">
+            <tr>
+                <th>Category</th>
+                <th>Examples</th>
+            </tr>
+            <tr>
+                <td><strong>Writing & Editing</strong></td>
+                <td>Write emails, essays, articles; edit for clarity; improve tone</td>
+            </tr>
+            <tr>
+                <td><strong>Programming</strong></td>
+                <td>Debug code; explain algorithms; generate code snippets; optimize performance</td>
+            </tr>
+            <tr>
+                <td><strong>Analysis & Research</strong></td>
+                <td>Summarize articles; analyze data; research topics; compare concepts</td>
+            </tr>
+            <tr>
+                <td><strong>Learning & Education</strong></td>
+                <td>Explain complex topics; create study guides; generate quiz questions</td>
+            </tr>
+            <tr>
+                <td><strong>Brainstorming</strong></td>
+                <td>Generate ideas; find solutions; explore different perspectives</td>
+            </tr>
+            <tr>
+                <td><strong>Productivity</strong></td>
+                <td>Create templates; outline projects; organize information</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>AI Writing Tools Capabilities</h2>
+        <p>The AI Writing Tools provide specialized assistance for text-based tasks:</p>
+        
+        <h3>Grammar & Style Checking</h3>
+        <ul>
+            <li>Detect grammatical errors and suggest corrections</li>
+            <li>Identify spelling and punctuation mistakes</li>
+            <li>Check tone and readability</li>
+            <li>Suggest style improvements</li>
+        </ul>
+
+        <h3>Text Transformation</h3>
+        <ul>
+            <li><strong>Paraphrasing:</strong> Rewrite text while preserving meaning</li>
+            <li><strong>Summarization:</strong> Create concise summaries of longer content</li>
+            <li><strong>Expansion:</strong> Develop ideas and add more detail</li>
+            <li><strong>Tone Adjustment:</strong> Make text more formal, casual, professional, friendly, etc.</li>
+        </ul>
+
+        <h3>Content Generation</h3>
+        <ul>
+            <li>Generate email templates</li>
+            <li>Create social media posts</li>
+            <li>Write product descriptions</li>
+            <li>Generate brainstorm ideas</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Important Limitations & Requirements</h2>
+        
+        <h3>🌍 Geographic Restriction</h3>
+        <div class="warning-box">
+            ⚠️ AI features are <strong>available in the United States only</strong>, due to Cerebras API export restrictions. If you're outside the US, the AI tools won't work even with a valid API key.
+        </div>
+
+        <h3>🔑 API Key Required</h3>
+        <p>To use AI features, you need a free Cerebras API key. See <a href="cerebras-setup.html" style="color:var(--primary);">Setting Up Cerebras AI</a> for setup instructions.</p>
+
+        <h3>📡 Internet Connection Required</h3>
+        <p>AI tools need a live internet connection to communicate with Cerebras servers. All other My Toolbox tools work offline.</p>
+
+        <h3>🔒 Privacy & Data</h3>
+        <ul>
+            <li>Your prompts are sent to Cerebras servers in real-time</li>
+            <li>See the <a href="privacy.html" style="color:var(--primary);">Privacy Policy</a> for details on data handling</li>
+            <li>Cerebras does not store conversations — they're processed and discarded</li>
+        </ul>
+
+        <h3>⏱️ Rate Limits</h3>
+        <p>Free Cerebras accounts may have rate limits on API calls. Check your account dashboard at <a href="https://cloud.cerebras.ai" target="_blank" style="color:var(--primary);">cloud.cerebras.ai</a> for current limits.</p>
+    </div>
+
+    <div class="card">
+        <h2>How to Use AI Features</h2>
+        
+        <h3>Step 1: Get an API Key</h3>
+        <ul>
+            <li>Sign up at <a href="https://cloud.cerebras.ai" target="_blank" style="color:var(--primary);">cloud.cerebras.ai</a></li>
+            <li>Generate an API key in the dashboard</li>
+            <li>Copy the key (shown only once)</li>
+        </ul>
+
+        <h3>Step 2: Configure My Toolbox</h3>
+        <ul>
+            <li>Add the key as an environment variable: <code>CEREBRAS_API_KEY</code></li>
+            <li>Follow the detailed guide in <a href="cerebras-setup.html" style="color:var(--primary);">Setting Up Cerebras AI</a></li>
+            <li>Restart My Toolbox to pick up the key</li>
+        </ul>
+
+        <h3>Step 3: Open an AI Tool</h3>
+        <ul>
+            <li>Go to the My Toolbox dashboard</li>
+            <li>Click <strong>AI Chatbot</strong> or <strong>AI Writing Tools</strong></li>
+            <li>Start using the tool immediately</li>
+        </ul>
+
+        <h3>Step 4: Use It</h3>
+        <p>Type your prompt, question, or text and let Claude AI help you. Results appear in seconds.</p>
+    </div>
+
+    <div class="card">
+        <h2>Tips & Best Practices</h2>
+        
+        <h3>For the AI Chatbot</h3>
+        <ul>
+            <li><strong>Be specific:</strong> More details = better responses. Instead of "help me code", say "help me write a Python function that converts hex colors to RGB"</li>
+            <li><strong>Provide context:</strong> Share relevant info or constraints</li>
+            <li><strong>Ask follow-ups:</strong> Refine or expand on answers with follow-up questions</li>
+            <li><strong>Use for brainstorming:</strong> Ask Claude to generate multiple ideas or approaches</li>
+        </ul>
+
+        <h3>For AI Writing Tools</h3>
+        <ul>
+            <li><strong>Paste complete text:</strong> The tool works best with full passages, not fragments</li>
+            <li><strong>Specify tone:</strong> Tell it what tone you want (formal, casual, creative, etc.)</li>
+            <li><strong>Review suggestions:</strong> AI isn't perfect — always review and edit as needed</li>
+            <li><strong>Iterate:</strong> Use multiple passes to refine text (summarize → expand → tone adjust)</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Troubleshooting AI Features</h2>
+        
+        <h3>❌ "Invalid API Key" Error</h3>
+        <p><strong>Solution:</strong> Your API key might be incorrect or expired. Go to <a href="https://cloud.cerebras.ai" target="_blank" style="color:var(--primary);">cloud.cerebras.ai</a>, generate a new key, and update your <code>CEREBRAS_API_KEY</code> environment variable.</p>
+
+        <h3>❌ "Not Available in Your Region"</h3>
+        <p><strong>Solution:</strong> AI features only work in the United States. If you're outside the US, the feature won't work regardless of API key validity.</p>
+
+        <h3>❌ Slow Responses or Timeouts</h3>
+        <p><strong>Solution:</strong> Check your internet connection. Large requests may take longer. Cerebras servers might be under heavy load — try again in a few minutes.</p>
+
+        <h3>❌ Rate Limit Exceeded</h3>
+        <p><strong>Solution:</strong> You've hit your API quota. Check your usage at <a href="https://cloud.cerebras.ai" target="_blank" style="color:var(--primary);">cloud.cerebras.ai</a>. Free tier limits reset monthly.</p>
+
+        <h3>❌ Feature Still Won't Work</h3>
+        <p><a href="report.html" style="color:var(--primary);">Report the issue on GitHub</a> with your error message and system details.</p>
+    </div>
+
+    <div class="card">
+        <h2>Next Steps</h2>
+        <p>Ready to set up AI features?</p>
+        <ul>
+            <li>🔧 <a href="cerebras-setup.html" style="color:var(--primary);">Setting Up Cerebras AI</a> — Complete setup guide</li>
+            <li>🚀 <a href="getting-started.html" style="color:var(--primary);">Getting Started</a> — Quick setup for all of My Toolbox</li>
+            <li>📚 <a href="documentation.html" style="color:var(--primary);">Back to Documentation</a> — All docs and guides</li>
+        </ul>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html"> 🛠️ Tools</a></li>
+                <li><a href="download.html"> 📥 Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading AI info...", "Analyzing capabilities...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

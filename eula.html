@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EULA - My Toolbox</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #0078d7; --primary-dark: #005a9e; --light: #f5f5f5; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f9f9f9; color: #333; }
+
+        /* LOADING */
+        #loading-screen {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            display:flex; align-items:center; justify-content:center;
+            z-index:9999; transition: opacity 0.6s ease;
+        }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:70px; display:block; animation:bounce 1.5s infinite; margin-bottom:14px; }
+        .loading-title { font-size:30px; font-weight:bold; margin-bottom:6px; }
+        .loading-sub { font-size:14px; opacity:0.85; margin-bottom:26px; }
+        .spinner { width:40px; height:40px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 18px; }
+        .progress-wrap { width:240px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 10px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:12px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1100px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:20px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:22px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:50px 20px; text-align:center; }
+        .page-hero h1 { font-size:36px; margin-bottom:10px; }
+        .page-hero p { font-size:15px; opacity:0.9; }
+
+        /* CONTENT */
+        .container { max-width:900px; margin:40px auto; padding:0 20px 60px; }
+        .legal-card { background:white; border-radius:12px; padding:40px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid #e0e0e0; }
+        .legal-card .meta { background:#f0f4f8; border-radius:8px; padding:16px 20px; margin-bottom:30px; font-size:13px; color:#555; line-height:2; }
+        .legal-card .meta strong { color:var(--primary); }
+
+        /* WARNING BOX */
+        .warning-box { background:#fff3cd; border:1px solid #ffc107; border-left:5px solid #ffc107; border-radius:6px; padding:16px 20px; margin:20px 0; font-size:14px; }
+        .warning-box strong { color:#856404; }
+
+        /* SECTION */
+        .legal-section { margin:30px 0; }
+        .legal-section h2 { font-size:18px; color:var(--primary); border-bottom:2px solid var(--primary); padding-bottom:8px; margin-bottom:16px; }
+        .legal-section h3 { font-size:15px; color:#333; margin:16px 0 10px; font-weight:600; }
+        .legal-section p { font-size:14px; line-height:1.8; color:#444; margin-bottom:12px; }
+        .legal-section ul { list-style:none; margin:10px 0; }
+        .legal-section ul li { font-size:14px; padding:5px 0; color:#444; border-bottom:1px solid #f5f5f5; display:flex; gap:8px; }
+        .legal-section ul li:last-child { border-bottom:none; }
+        .yes { color:#28a745; font-weight:bold; }
+        .no { color:#dc3545; font-weight:bold; }
+        .warn { color:#ffc107; font-weight:bold; }
+
+        /* TABLE OF CONTENTS */
+        .toc { background:#f8f9fa; border-radius:8px; padding:20px 24px; margin-bottom:30px; border:1px solid #e0e0e0; }
+        .toc h3 { color:var(--primary); margin-bottom:12px; font-size:16px; }
+        .toc ol { padding-left:20px; }
+        .toc li { font-size:13px; padding:4px 0; }
+        .toc a { color:var(--primary); text-decoration:none; }
+        .toc a:hover { text-decoration:underline; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:30px 20px; text-align:center; }
+        .footer-links { display:flex; justify-content:center; gap:24px; margin-bottom:16px; flex-wrap:wrap; }
+        .footer-links a { color:#aaa; text-decoration:none; font-size:13px; transition:color 0.2s; }
+        .footer-links a:hover { color:white; }
+        footer p { color:#aaa; font-size:13px; margin-bottom:4px; }
+
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">⚖️</span>
+        <h1 class="loading-title">EULA</h1>
+        <p class="loading-sub">Loading license agreement...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="download.html">Download</a></li>
+            <li><a href="eula.html" class="active">EULA</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>⚖️ End-User License Agreement</h1>
+    <p>Please read this agreement carefully before installing or using My Toolbox</p>
+</div>
+
+<div class="container">
+    <div class="legal-card">
+
+        <!-- META -->
+        <div class="meta">
+            <strong>Application:</strong> My Toolbox Desktop Application<br>
+            <strong>Version:</strong> 2.1 &nbsp;|&nbsp;
+            <strong>Last Updated:</strong> June 20, 2026 &nbsp;|&nbsp;
+            <strong>Effective:</strong> Upon Installation
+        </div>
+
+        <!-- WARNING -->
+        <div class="warning-box">
+            ⚠️ <strong>IMPORTANT:</strong> By installing, accessing, downloading, or using this Software, you agree to be legally bound by all terms of this EULA. If you do not agree, do not install or use the Software.
+        </div>
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h3>📋 Table of Contents</h3>
+            <ol>
+                <li><a href="#s1">License Grant and Scope</a></li>
+                <li><a href="#s2">Critical Warnings and Disclaimers</a></li>
+                <li><a href="#s3">Disclaimers and Limitations of Liability</a></li>
+                <li><a href="#s4">User Responsibilities and Prohibited Conduct</a></li>
+                <li><a href="#s5">Intellectual Property Rights</a></li>
+                <li><a href="#s6">Microsoft Assets Warning</a></li>
+                <li><a href="#s7">Updates and Support</a></li>
+                <li><a href="#s8">Termination</a></li>
+                <li><a href="#s9">Data and Privacy</a></li>
+                <li><a href="#s10">Governing Law</a></li>
+                <li><a href="#s11">Acknowledgment</a></li>
+            </ol>
+        </div>
+
+        <!-- SECTION 1 -->
+        <div class="legal-section" id="s1">
+            <h2>1. License Grant and Scope</h2>
+            <h3>1.1 What You Can Do</h3>
+            <ul>
+                <li><span class="yes">✓</span> Install on ONE personal computer for personal use</li>
+                <li><span class="yes">✓</span> Use all 21 tools for non-commercial purposes</li>
+                <li><span class="yes">✓</span> Make ONE backup copy for archival purposes</li>
+                <li><span class="yes">✓</span> View documentation and help materials</li>
+            </ul>
+            <h3>1.2 What You Cannot Do</h3>
+            <ul>
+                <li><span class="no">✗</span> Distribute, sell, rent, lease, or sublicense the Software</li>
+                <li><span class="no">✗</span> Modify, decompile, or reverse engineer the Software</li>
+                <li><span class="no">✗</span> Use for commercial purposes without written permission</li>
+                <li><span class="no">✗</span> Install on multiple computers</li>
+                <li><span class="no">✗</span> Upload to file-sharing networks</li>
+                <li><span class="no">✗</span> Use to build competing products</li>
+                <li><span class="no">✗</span> Remove or alter copyright/trademark notices</li>
+            </ul>
+        </div>
+
+        <!-- SECTION 2 -->
+        <div class="legal-section" id="s2">
+            <h2>2. Critical Warnings and Disclaimers</h2>
+            <h3>⚠️ AI Features — US Only</h3>
+            <p>AI-powered features (AI Chatbot, AI Writing Tools) are restricted to the United States only due to US export control regulations. Users outside the US will receive errors. VPN/proxy bypass is strictly prohibited.</p>
+            <h3>⚠️ Internet Required</h3>
+            <p>AI Chatbot, AI Writing Tools, and Currency Converter require an active internet connection. The Developer is not responsible for connectivity issues or service interruptions.</p>
+            <h3>⚠️ Data Security</h3>
+            <p>Notes are stored in plaintext with NO encryption. Do NOT input passwords, SSNs, credit card numbers, banking info, health data, or any sensitive personal information into the Software.</p>
+            <h3>⚠️ Calculator</h3>
+            <p>Do NOT use the Calculator for financial, medical, engineering, or any life-critical calculations. Results may be imprecise due to floating-point arithmetic limitations.</p>
+            <h3>⚠️ QR Codes</h3>
+            <p>QR codes are plaintext and unencrypted. Anyone with a scanner can decode the content. Do NOT encode sensitive information in QR codes.</p>
+        </div>
+
+        <!-- SECTION 3 -->
+        <div class="legal-section" id="s3">
+            <h2>3. Disclaimers and Limitations of Liability</h2>
+            <p>THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT ANY WARRANTIES. The Developer EXPLICITLY DISCLAIMS all implied warranties of merchantability, fitness for a particular purpose, accuracy, reliability, and non-infringement.</p>
+            <p>The Developer's TOTAL LIABILITY is limited to <strong>ZERO DOLLARS ($0.00)</strong> because the Software is provided free of charge.</p>
+            <p>The Developer is NOT responsible for third-party service failures (Cerebras, Frankfurter API), data loss, system crashes, or any damages arising from use of the Software.</p>
+        </div>
+
+        <!-- SECTION 4 -->
+        <div class="legal-section" id="s4">
+            <h2>4. User Responsibilities</h2>
+            <ul>
+                <li><span class="yes">✓</span> Comply with all applicable laws and regulations</li>
+                <li><span class="yes">✓</span> Use responsibly and ethically</li>
+                <li><span class="yes">✓</span> Maintain regular backups of important data</li>
+                <li><span class="no">✗</span> Use for illegal activities</li>
+                <li><span class="no">✗</span> Use to harass, threaten, or abuse others</li>
+                <li><span class="no">✗</span> Circumvent geographic or API restrictions</li>
+                <li><span class="no">✗</span> Generate fraudulent, deceptive, or malicious content</li>
+            </ul>
+        </div>
+
+        <!-- SECTION 5 -->
+        <div class="legal-section" id="s5">
+            <h2>5. Intellectual Property Rights</h2>
+            <p>All intellectual property in the Software (source code, UI design, logos, documentation) is owned exclusively by <strong>Tanuj Gunasekara</strong>. This EULA grants a license to USE the Software, not ownership.</p>
+        </div>
+
+        <!-- SECTION 6 -->
+        <div class="legal-section" id="s6">
+            <h2>6. ⚠️ Microsoft Assets Warning</h2>
+            <div class="warning-box">
+                ⚠️ <strong>CRITICAL:</strong> This Software includes assets belonging to Microsoft Corporation including Windows sounds, wallpapers, and sample media. These assets are for personal, non-commercial use ONLY.
+            </div>
+            <ul>
+                <li><span class="yes">✓</span> Personal, non-commercial use only</li>
+                <li><span class="yes">✓</span> Educational and nostalgic purposes</li>
+                <li><span class="no">✗</span> Commercial use or sale</li>
+                <li><span class="no">✗</span> Redistribution of Microsoft assets</li>
+                <li><span class="no">✗</span> Claiming ownership of Microsoft assets</li>
+                <li><span class="no">✗</span> Using in business applications</li>
+            </ul>
+            <p>Windows® is a registered trademark of Microsoft Corporation. The Developer is not affiliated with or endorsed by Microsoft.</p>
+        </div>
+
+        <!-- SECTION 7 -->
+        <div class="legal-section" id="s7">
+            <h2>7. Updates and Support</h2>
+            <p>The Developer has NO obligation to provide updates, bug fixes, or technical support. Updates may be provided at Developer's discretion. The Software may be discontinued at any time without notice.</p>
+        </div>
+
+        <!-- SECTION 8 -->
+        <div class="legal-section" id="s8">
+            <h2>8. Termination</h2>
+            <p>Your license is IMMEDIATELY TERMINATED if you violate any term of this EULA. Upon termination, you must uninstall the Software and delete all copies within 24 hours.</p>
+        </div>
+
+        <!-- SECTION 9 -->
+        <div class="legal-section" id="s9">
+            <h2>9. Data and Privacy</h2>
+            <p>The Software does NOT collect personal data, usage analytics, or telemetry. However, AI features send prompts to Cerebras servers, and Currency Converter sends queries to Frankfurter API. Review their respective privacy policies.</p>
+        </div>
+
+        <!-- SECTION 10 -->
+        <div class="legal-section" id="s10">
+            <h2>10. Governing Law</h2>
+            <p>This EULA is governed by the laws of <strong>Sri Lanka</strong>. Any disputes shall be resolved through binding arbitration in Sri Lanka. You waive rights to class action lawsuits and jury trials.</p>
+        </div>
+
+        <!-- SECTION 11 -->
+        <div class="legal-section" id="s11">
+            <h2>11. Acknowledgment</h2>
+            <p>By installing or using this Software, you acknowledge that you have read, understood, and agree to be legally bound by all terms of this EULA.</p>
+            <ul>
+                <li><span class="yes">✓</span> I have read this entire EULA</li>
+                <li><span class="yes">✓</span> I understand every term and condition</li>
+                <li><span class="yes">✓</span> I am legally bound by this Agreement</li>
+                <li><span class="yes">✓</span> I assume all risks of using the Software</li>
+                <li><span class="yes">✓</span> I am legally responsible for my use</li>
+            </ul>
+        </div>
+
+        <p style="text-align:center; color:#888; font-size:13px; margin-top:30px; padding-top:20px; border-top:1px solid #eee;">
+            Version 2.1 &nbsp;|&nbsp; Last Updated: June 20, 2026 &nbsp;|&nbsp; © 2026 Tanuj Gunasekara. All rights reserved.
+        </p>
+
+    </div>
+</div>
+
+<footer>
+    <div class="footer-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="releases.html">📦 Releases</a>
+        <a href="eula.html">⚖️ EULA</a>
+        <a href="privacy.html">🔒 Privacy Policy</a>
+        <a href="terms.html">📋 Terms of Service</a>
+    </div>
+    <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+    <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+</footer>
+
+</div>
+
+<script>
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const msgs = ["Loading agreement...", "Preparing document...", "Almost ready...", "Ready! 🎉"];
+    const interval = setInterval(() => {
+        progress += 25;
+        if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = msgs[Math.floor(progress/30)] || msgs[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval);
+        fill.style.width = '100%';
+        msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Interface - My Toolbox</title>
+    <meta name="description" content="Learn how to navigate and customize My Toolbox.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:60px 20px; text-align:center; }
+        .page-hero h1 { font-size:38px; margin-bottom:12px; }
+        .page-hero p { font-size:16px; opacity:0.9; }
+
+        .container { max-width:900px; margin:0 auto; padding:50px 20px; }
+
+        .card { background:white; border-radius:12px; padding:30px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .card h2 { font-size:20px; color:var(--primary); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .card h3 { font-size:16px; color:var(--text); margin:20px 0 10px; }
+        .card p { font-size:14px; color:#444; margin-bottom:12px; }
+        .card ol, .card ul { margin:10px 0 14px 22px; font-size:14px; color:#444; }
+        .card li { margin-bottom:8px; line-height:1.8; }
+
+        /* INFO BOX */
+        .info-box { background:#e7f3ff; border:1px solid #b3d9ff; border-left:4px solid var(--primary); border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#004085; }
+        .tip-box { background:#d1ecf1; border:1px solid #bee5eb; border-left:4px solid #17a2b8; border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#0c5460; }
+
+        /* FEATURES GRID */
+        .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin:14px 0; }
+        .feature-item { background:var(--light); padding:16px; border-radius:6px; border-left:4px solid var(--primary); }
+        .feature-item h4 { color:var(--primary); margin-bottom:6px; font-size:14px; }
+        .feature-item p { font-size:12px; color:#666; }
+
+        /* THEME SHOWCASE */
+        .theme-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin:14px 0; }
+        .theme-item {
+            background:white; border-radius:8px; padding:20px; text-align:center;
+            border:2px solid var(--border); transition:all 0.2s;
+        }
+        .theme-item:hover { border-color:var(--primary); box-shadow:0 4px 12px rgba(0,120,215,0.15); }
+        .theme-item .theme-preview { width:100%; height:80px; border-radius:6px; margin-bottom:12px; border:1px solid #ddd; }
+        .theme-item h4 { font-size:14px; color:var(--primary); margin-bottom:4px; }
+        .theme-item p { font-size:12px; color:#666; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">🖥️</span>
+        <h1 class="loading-title">The Interface</h1>
+        <p class="loading-sub">Loading interface guide...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="documentation.html">Docs</a></li>
+            <li><a href="report.html">Report</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>🖥️ The Interface</h1>
+    <p>Navigate, customize, and master My Toolbox's interface</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Dashboard Overview</h2>
+        <p>When you launch My Toolbox, you'll see the main dashboard — your central hub for all 21 tools.</p>
+        
+        <h3>Dashboard Elements</h3>
+        <div class="features-grid">
+            <div class="feature-item">
+                <h4>Tool Cards</h4>
+                <p>Grid of all 21 tools, each with an icon and quick description. Click to open.</p>
+            </div>
+            <div class="feature-item">
+                <h4>Top Menu Bar</h4>
+                <p>Home, Settings, Help, and About buttons for quick access.</p>
+            </div>
+            <div class="feature-item">
+                <h4>Search Bar</h4>
+                <p>Quickly find tools by typing their name.</p>
+            </div>
+            <div class="feature-item">
+                <h4>Status Bar</h4>
+                <p>Shows current theme, version, and system status at the bottom.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Navigation</h2>
+        <p>Moving around My Toolbox is straightforward.</p>
+        
+        <h3>From the Dashboard</h3>
+        <ul>
+            <li><strong>Open a Tool:</strong> Click any tool card to launch it immediately</li>
+            <li><strong>Go Back:</strong> Click the <strong>Home</strong> button or press <code>Escape</code> (tool-dependent)</li>
+            <li><strong>Search Tools:</strong> Type a tool name in the search bar to filter the grid</li>
+            <li><strong>Settings:</strong> Click the <strong>Settings</strong> icon (gear icon) to customize appearance and behavior</li>
+        </ul>
+
+        <h3>Inside a Tool</h3>
+        <ul>
+            <li><strong>Back to Dashboard:</strong> Click the <strong>Home</strong> button or use the back arrow (usually top-left)</li>
+            <li><strong>Close Tool:</strong> Click the X button in the top-right corner</li>
+            <li><strong>Keyboard Shortcuts:</strong> Many tools support keyboard shortcuts — check the Help menu inside each tool</li>
+        </ul>
+
+        <div class="info-box">
+            💡 <strong>Pro Tip:</strong> Right-click on a tool card from the dashboard for quick actions like "Pin to Taskbar" or "Run on Startup" (if available).
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Settings & Customization</h2>
+        <p>Make My Toolbox feel like yours with themes, language, and behavior settings.</p>
+        
+        <h3>Accessing Settings</h3>
+        <ol>
+            <li>Click the <strong>Settings</strong> icon (⚙️) from the dashboard or top menu</li>
+            <li>Browse categories on the left sidebar (Appearance, Behavior, Advanced, About)</li>
+            <li>Adjust preferences and apply immediately</li>
+        </ol>
+
+        <h3>Available Settings</h3>
+        
+        <h4>Appearance</h4>
+        <ul>
+            <li><strong>Theme:</strong> Choose from 5 built-in themes (Light, Dark, Blue, Green, Purple)</li>
+            <li><strong>Font Size:</strong> Increase or decrease text size globally (100%, 110%, 120%)</li>
+            <li><strong>Show Grid Lines:</strong> Toggle decorative grid background on/off</li>
+            <li><strong>Animations:</strong> Enable smooth transitions between screens</li>
+        </ul>
+
+        <h4>Behavior</h4>
+        <ul>
+            <li><strong>Always on Top:</strong> Keep My Toolbox above other windows</li>
+            <li><strong>Remember Window Position:</strong> Save and restore window size/location on startup</li>
+            <li><strong>Confirm Before Close:</strong> Ask before closing the app (prevents accidents)</li>
+            <li><strong>Auto-Check for Updates:</strong> Notify when a new version is available</li>
+        </ul>
+
+        <h4>Advanced</h4>
+        <ul>
+            <li><strong>Clear Cache:</strong> Remove temporary files and reset certain tools</li>
+            <li><strong>Data Storage Path:</strong> View or change where notes and preferences are saved</li>
+            <li><strong>Reset to Defaults:</strong> Restore all settings to factory defaults</li>
+            <li><strong>Enable Developer Mode:</strong> Show debug logs and performance metrics (for troubleshooting)</li>
+        </ul>
+
+        <div class="tip-box">
+            💡 <strong>Tip:</strong> Settings are saved automatically. You don't need to click "Save" after making changes.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>5 Built-In Themes</h2>
+        <p>My Toolbox comes with 5 professionally designed themes to suit your mood and preference.</p>
+        
+        <div class="theme-grid">
+            <div class="theme-item">
+                <div class="theme-preview" style="background:linear-gradient(135deg, #f5f5f5 50%, #ffffff 50%);"></div>
+                <h4>Light</h4>
+                <p>Clean, minimal bright interface</p>
+            </div>
+            <div class="theme-item">
+                <div class="theme-preview" style="background:linear-gradient(135deg, #1e1e1e 50%, #2d2d2d 50%);"></div>
+                <h4>Dark</h4>
+                <p>Easy on the eyes, modern dark mode</p>
+            </div>
+            <div class="theme-item">
+                <div class="theme-preview" style="background:linear-gradient(135deg, #0078d7 50%, #005a9e 50%);"></div>
+                <h4>Blue</h4>
+                <p>Professional corporate blue</p>
+            </div>
+            <div class="theme-item">
+                <div class="theme-preview" style="background:linear-gradient(135deg, #28a745 50%, #1e7e34 50%);"></div>
+                <h4>Green</h4>
+                <p>Fresh, energetic green theme</p>
+            </div>
+            <div class="theme-item">
+                <div class="theme-preview" style="background:linear-gradient(135deg, #6f42c1 50%, #5a32a3 50%);"></div>
+                <h4>Purple</h4>
+                <p>Creative, artistic purple palette</p>
+            </div>
+        </div>
+
+        <p style="margin-top:20px; font-size:14px; color:#666;">To change themes: <strong>Settings</strong> → <strong>Appearance</strong> → <strong>Theme</strong> → Select and Apply.</p>
+    </div>
+
+    <div class="card">
+        <h2>Status Bar & System Tray</h2>
+        <p>The status bar at the bottom of My Toolbox shows useful information at a glance.</p>
+        
+        <h3>Status Bar Information</h3>
+        <ul>
+            <li><strong>Current Theme:</strong> Shows which theme is active</li>
+            <li><strong>Application Version:</strong> Your installed version number (e.g., v2.1)</li>
+            <li><strong>System Status:</strong> CPU & RAM usage, time until auto-lock, etc.</li>
+            <li><strong>Connection Status:</strong> Indicates if internet is available (relevant for AI & currency tools)</li>
+        </ul>
+
+        <h3>System Tray Icon</h3>
+        <p>My Toolbox adds an icon to your system tray (bottom-right taskbar) for quick access:</p>
+        <ul>
+            <li><strong>Single-click:</strong> Show or hide the window</li>
+            <li><strong>Right-click:</strong> Quick menu (Settings, About, Exit)</li>
+        </ul>
+
+        <div class="info-box">
+            💡 To disable the system tray icon, go to <strong>Settings</strong> → <strong>Behavior</strong> and toggle <strong>Show in System Tray</strong> off.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Keyboard Shortcuts (Global)</h2>
+        <p>These shortcuts work from any screen in My Toolbox:</p>
+        
+        <ul>
+            <li><code>Ctrl + H</code> — Go to Home / Dashboard</li>
+            <li><code>Ctrl + S</code> — Open Settings</li>
+            <li><code>Ctrl + F</code> — Focus the search bar</li>
+            <li><code>Ctrl + Q</code> — Quit My Toolbox</li>
+            <li><code>Escape</code> — Go back (context-dependent)</li>
+            <li><code>F1</code> — Open Help</li>
+            <li><code>F11</code> — Toggle fullscreen (if supported)</li>
+        </ul>
+
+        <div class="tip-box">
+            💡 Individual tools may have their own shortcuts — check the Help menu inside each tool.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Tips & Tricks</h2>
+        
+        <h3>🎯 Stay Organized</h3>
+        <ul>
+            <li>Use the search bar to quickly find tools instead of scrolling</li>
+            <li>Pin frequently-used tools to the taskbar (right-click tool card)</li>
+            <li>Group related tools in your mind (all AI tools, all converters, etc.)</li>
+        </ul>
+
+        <h3>🎨 Personalize Your Experience</h3>
+        <ul>
+            <li>Switch themes based on time of day (Light during day, Dark at night)</li>
+            <li>Adjust font size for comfort (Settings → Appearance → Font Size)</li>
+            <li>Enable "Always on Top" if you frequently reference data while working</li>
+        </ul>
+
+        <h3>⚡ Work Efficiently</h3>
+        <ul>
+            <li>Use keyboard shortcuts to navigate faster</li>
+            <li>Keep My Toolbox minimized in the system tray and toggle it quickly</li>
+            <li>Enable auto-check for updates so you never miss bug fixes</li>
+        </ul>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading interface guide...", "Preparing screens...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

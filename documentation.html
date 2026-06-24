@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - My Toolbox</title>
+    <meta name="description" content="Documentation and usage guides for My Toolbox - 21 Professional Desktop Tools.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1100px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:60px 20px; text-align:center; }
+        .page-hero h1 { font-size:40px; margin-bottom:12px; }
+        .page-hero p { font-size:17px; opacity:0.9; }
+
+        /* LAYOUT */
+        .page-layout { display:grid; grid-template-columns:260px 1fr; gap:30px; max-width:1100px; margin:0 auto; padding:40px 20px; }
+
+        .sidebar { position:sticky; top:80px; height:fit-content; }
+        .sidebar-card { background:white; border-radius:12px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); }
+        .sidebar-card h4 { font-size:15px; color:var(--primary); margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+        .toc-list { list-style:none; }
+        .toc-list li { padding:6px 0; font-size:13px; }
+        .toc-list a { color:#555; text-decoration:none; }
+        .toc-list a:hover { color:var(--primary); text-decoration:underline; }
+
+        .card { background:white; border-radius:12px; padding:34px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .card h2 { font-size:22px; color:var(--primary); margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .card h3 { font-size:16px; color:var(--text); margin:18px 0 8px; }
+        .card p { font-size:14px; color:#444; margin-bottom:12px; }
+        .card ul, .card ol { margin:10px 0 14px 22px; font-size:14px; color:#444; }
+        .card li { margin-bottom:6px; }
+        .card code, .doc-code {
+            background:#f0f4f8; border:1px solid var(--border); border-radius:6px;
+            padding:2px 7px; font-family:'Courier New', monospace; font-size:13px; color:#0078d7;
+        }
+        .code-block {
+            background:#1e1e1e; color:#d4d4d4; border-radius:8px; padding:16px 20px;
+            font-family:'Courier New', monospace; font-size:13px; overflow-x:auto; margin:12px 0;
+        }
+        .info-box { background:#e8f4fd; border:1px solid #0078d7; border-left:5px solid #0078d7; border-radius:6px; padding:14px 18px; margin:16px 0; font-size:14px; color:#004085; }
+        .tools-table { width:100%; border-collapse:collapse; margin:14px 0; font-size:13px; }
+        .tools-table th, .tools-table td { padding:10px 12px; border-bottom:1px solid #f0f0f0; text-align:left; }
+        .tools-table th { color:var(--primary); font-size:13px; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .page-hero h1 { font-size:28px; }
+            .loading-title { font-size:26px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">📚</span>
+        <h1 class="loading-title">Documentation</h1>
+        <p class="loading-sub">Loading docs...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="documentation.html" class="active">Docs</a></li>
+            <li><a href="report.html">Report</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>📚 Documentation</h1>
+    <p>Everything you need to install, use, and get the most out of My Toolbox</p>
+</div>
+
+<div class="page-layout">
+
+    <!-- SIDEBAR TOC -->
+    <div class="sidebar">
+        <div class="sidebar-card">
+            <h4>📋 Contents</h4>
+            <ul class="toc-list">
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="interface.html">The Interface</a></li>
+                <li><a href="tools-overview.html">Tools Overview</a></li>
+                <li><a href="ai-features.html">AI Features</a></li>
+                <li><a href="cerebras-setup.html">Setting Up Cerebras AI</a></li>
+                <li><a href="themes.html">Themes</a></li>
+                <li><a href="data-storage.html">Data & Storage</a></li>
+                <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- DOCS CONTENT -->
+    <div>
+
+        <div class="card" id="getting-started">
+            <h2>🚀 Getting Started</h2>
+            <p>My Toolbox is a desktop application built with Python and PySide6, bundling 21 productivity, creativity, and system tools into a single, themeable interface.</p>
+            <div class="info-box">
+                💡 <strong>Tip:</strong> No account, sign-up, or internet connection is required for most tools. A handful of tools (AI Chatbot, AI Writing Tools, Currency Converter) need internet access to reach their respective APIs.
+            </div>
+        </div>
+
+        <div class="card" id="installation">
+            <h2>💾 Installation</h2>
+            <h3>Option 1 — Windows Installer (Recommended)</h3>
+            <ol>
+                <li>Go to the <a href="releases.html" style="color:var(--primary);">Releases</a> page</li>
+                <li>Download the latest <code>MyToolbox-Setup.exe</code></li>
+                <li>Run the installer and follow the on-screen steps</li>
+                <li>Launch My Toolbox from the Start Menu or Desktop shortcut</li>
+            </ol>
+            <h3>Option 2 — Run From Source</h3>
+            <div class="code-block">
+git clone https://github.com/tanujgunasekara26-hue/my-toolbox.git<br>
+cd my-toolbox<br>
+pip install -r requirements.txt<br>
+python main.py
+            </div>
+            <p>Requires Python 3.10+ and the dependencies listed in <code>requirements.txt</code> (PySide6, psutil, opencv-python, numpy, requests).</p>
+        </div>
+
+        <div class="card" id="interface">
+            <h2>🖥️ The Interface</h2>
+            <p>The app opens to a <strong>Home</strong> dashboard listing every available tool. Use the sidebar to navigate between tools at any time — your current tool stays open until you switch.</p>
+            <ul>
+                <li><strong>Sidebar:</strong> Quick navigation to all 21 tools plus the About page</li>
+                <li><strong>Theme Switcher:</strong> Found in settings — choose from 5 built-in themes</li>
+                <li><strong>Title Bar:</strong> Shows the active tool name</li>
+            </ul>
+        </div>
+
+        <div class="card" id="tools-overview">
+            <h2>🛠️ Tools Overview</h2>
+            <table class="tools-table">
+                <tr><th>Tool</th><th>What it does</th></tr>
+                <tr><td>🤖 AI Chatbot</td><td>Chat with Cerebras AI for questions and help</td></tr>
+                <tr><td>✍️ AI Writing Tools</td><td>Grammar, tone, summarization, paraphrasing</td></tr>
+                <tr><td>🧮 Calculator</td><td>Safe expression evaluator (AST-based, no <code>eval()</code>)</td></tr>
+                <tr><td>📐 Unit Converter</td><td>7 categories incl. length, weight, temperature, data</td></tr>
+                <tr><td>💱 Currency Converter</td><td>Live exchange rates via the Frankfurter API</td></tr>
+                <tr><td>🔑 Password Generator</td><td>Customizable secure passwords with a strength meter</td></tr>
+                <tr><td>📝 Notes</td><td>Plaintext note-taking saved to <code>data/notes.txt</code></td></tr>
+                <tr><td>⏱️ Timer</td><td>Countdown timer with a circular progress ring</td></tr>
+                <tr><td>⏲️ Stopwatch</td><td>Precision stopwatch with lap/split tracking</td></tr>
+                <tr><td>📷 QR Generator</td><td>Create QR codes from text or URLs</td></tr>
+                <tr><td>🔍 QR Scanner</td><td>Scan QR codes from an image or live webcam</td></tr>
+                <tr><td>📄 PDF Tools</td><td>Merge, split, extract, and watermark PDFs</td></tr>
+                <tr><td>🖼️ Image Tools</td><td>Resize, crop, convert, and apply effects</td></tr>
+                <tr><td>📝 Text Tools</td><td>Case conversion, word count, text analysis</td></tr>
+                <tr><td>⚡ Productivity Tools</td><td>Pomodoro timer, to-do list, habit tracker</td></tr>
+                <tr><td>💼 Business Tools</td><td>Invoice generator, expense tracker</td></tr>
+                <tr><td>👨‍💻 Developer Tools</td><td>JSON formatter, color converter, regex tester</td></tr>
+                <tr><td>📚 Educational Tools</td><td>Flashcards, study timer, quizzes</td></tr>
+                <tr><td>💰 Financial Tools</td><td>Loan calculator, investment analyzer</td></tr>
+                <tr><td>🎵 Retro Windows</td><td>Vintage Windows sounds, wallpapers, sample media</td></tr>
+                <tr><td>🖥️ System Info</td><td>Live CPU, RAM, storage, and network stats</td></tr>
+                <tr><td>ℹ️ About</td><td>Version, credits, and live app statistics</td></tr>
+            </table>
+        </div>
+
+        <div class="card" id="ai-features">
+            <h2>🤖 AI Features</h2>
+            <p>The AI Chatbot and AI Writing Tools are powered by the Cerebras API.</p>
+            <ul>
+                <li><strong>Availability:</strong> United States only, due to API export restrictions</li>
+                <li><strong>Internet:</strong> Required for every request</li>
+                <li><strong>Data:</strong> Prompts are sent directly to Cerebras — see the <a href="privacy.html" style="color:var(--primary);">Privacy Policy</a></li>
+            </ul>
+            <div class="info-box">
+                ⚠️ Attempting to bypass the geographic restriction with a VPN or proxy violates the <a href="terms.html" style="color:var(--primary);">Terms of Service</a>.
+            </div>
+        </div>
+
+        <div class="card" id="cerebras-setup">
+            <h2>🔧 Setting Up Cerebras AI</h2>
+            <p>The AI Chatbot and AI Writing Tools need a Cerebras API key to function. Follow the steps below to get a key and make it available to My Toolbox.</p>
+
+            <h3>1. Create a Cerebras Account</h3>
+            <ol>
+                <li>Go to <a href="https://cloud.cerebras.ai" target="_blank" style="color:var(--primary);">cloud.cerebras.ai</a></li>
+                <li>Sign up for a free account (or sign in if you already have one)</li>
+                <li>Verify your email if prompted</li>
+            </ol>
+
+            <h3>2. Generate an API Key</h3>
+            <ol>
+                <li>From the Cerebras Cloud dashboard, open the <strong>API Keys</strong> section</li>
+                <li>Click <strong>Create API Key</strong>, give it a name (e.g. <code>my-toolbox</code>), and confirm</li>
+                <li>Copy the generated key immediately — most providers only show it once</li>
+            </ol>
+            <div class="info-box">
+                💡 <strong>Tip:</strong> Treat your API key like a password. Never share it publicly, commit it to a public GitHub repo, or paste it into chat logs.
+            </div>
+
+            <h3>3. Add the Key as an Environment Variable (Windows)</h3>
+            <p>My Toolbox reads the key from an environment variable named <code>CEREBRAS_API_KEY</code>. You can set this permanently using the Windows GUI or the command line.</p>
+
+            <p><strong>Option A — Using the System Properties GUI:</strong></p>
+            <ol>
+                <li>Press <code>Win</code> and search for <strong>"Environment Variables"</strong></li>
+                <li>Click <strong>"Edit the system environment variables"</strong></li>
+                <li>In the System Properties window, click <strong>"Environment Variables..."</strong></li>
+                <li>Under <strong>"User variables"</strong>, click <strong>New...</strong></li>
+                <li>Set <strong>Variable name</strong> to <code>CEREBRAS_API_KEY</code></li>
+                <li>Set <strong>Variable value</strong> to your copied API key</li>
+                <li>Click OK on all open windows to save</li>
+                <li><strong>Restart My Toolbox</strong> (and your terminal, if running from source) so it picks up the new variable</li>
+            </ol>
+
+            <p><strong>Option B — Using Command Prompt:</strong></p>
+            <div class="code-block">
+setx CEREBRAS_API_KEY "your-api-key-here"
+            </div>
+            <p><code>setx</code> sets the variable permanently for your user account. Close and reopen any terminal or the app for the change to take effect.</p>
+
+            <p><strong>Option C — Using PowerShell:</strong></p>
+            <div class="code-block">
+[System.Environment]::SetEnvironmentVariable("CEREBRAS_API_KEY", "your-api-key-here", "User")
+            </div>
+
+            <h3>4. Adding Cerebras to PATH (Running from Source / CLI tools)</h3>
+            <p>If you're running My Toolbox from source and also want to use the Cerebras CLI or SDK tools directly from any terminal, make sure the Python <code>Scripts</code> folder (where pip installs console scripts) is on your <strong>PATH</strong>:</p>
+            <ol>
+                <li>Install the Cerebras SDK: <code>pip install cerebras-cloud-sdk --break-system-packages</code> (or without the flag in a virtual environment)</li>
+                <li>Find your Python Scripts folder, typically:
+                    <div class="code-block">C:\Users\&lt;YourUsername&gt;\AppData\Local\Programs\Python\Python3XX\Scripts</div>
+                </li>
+                <li>Open <strong>Environment Variables</strong> (same screen as above)</li>
+                <li>Under <strong>"User variables"</strong>, select <code>Path</code> → click <strong>Edit...</strong></li>
+                <li>Click <strong>New</strong> and paste the Scripts folder path</li>
+                <li>Click OK to save, then open a <strong>new</strong> terminal window to apply the change</li>
+            </ol>
+            <p>Verify it worked by running:</p>
+            <div class="code-block">
+python -c "import os; print(os.environ.get('CEREBRAS_API_KEY'))"
+            </div>
+            <p>If your key prints out (rather than <code>None</code>), the environment variable is correctly set and My Toolbox's AI Chatbot and AI Writing Tools will be able to use it.</p>
+
+            <h3>5. Confirm It's Working</h3>
+            <ol>
+                <li>Launch My Toolbox</li>
+                <li>Open the <strong>AI Chatbot</strong> tool</li>
+                <li>Send a test message</li>
+            </ol>
+            <p>If you see a response instead of an authentication error, you're all set.</p>
+
+            <div class="info-box">
+                ⚠️ Remember: Cerebras-powered features are restricted to users in the <strong>United States</strong> regardless of whether your API key is valid. See <a href="#ai-features" style="color:var(--primary);">AI Features</a> above and the <a href="terms.html" style="color:var(--primary);">Terms of Service</a>.
+            </div>
+        </div>
+
+        <div class="card" id="themes">
+            <h2>🎨 Themes</h2>
+            <p>My Toolbox ships with 5 built-in themes covering light and dark variants. Switch anytime from the settings menu — your choice is remembered between sessions.</p>
+        </div>
+
+        <div class="card" id="data-storage">
+            <h2>💾 Data & Storage</h2>
+            <p>All local data (notes, preferences, generated files) is stored on your own device — nothing is uploaded to any server controlled by the Developer.</p>
+            <ul>
+                <li>Notes are saved in <strong>plaintext</strong>, with no encryption</li>
+                <li>QR codes are not saved automatically unless you export them</li>
+                <li>App preferences persist locally between launches</li>
+            </ul>
+            <p>For full details, see the <a href="privacy.html" style="color:var(--primary);">Privacy Policy</a>.</p>
+        </div>
+
+        <div class="card" id="troubleshooting">
+            <h2>🔧 Troubleshooting</h2>
+            <h3>App won't open / antivirus flags the .exe</h3>
+            <p>Freshly built executables are sometimes flagged as a false positive by antivirus software. This is a known issue — see the <a href="report.html" style="color:var(--primary);">Known Issues</a> list.</p>
+            <h3>AI Chatbot says "unavailable in your region"</h3>
+            <p>This is expected outside the United States. It is a hard restriction of the underlying Cerebras API, not a bug.</p>
+            <h3>Currency Converter not updating</h3>
+            <p>Check your internet connection. Rates are fetched live from the Frankfurter API and update daily, not in real time.</p>
+        </div>
+
+        <div class="card" id="faq">
+            <h2>❓ FAQ</h2>
+            <h3>Is My Toolbox free?</h3>
+            <p>Yes, completely free and open-source.</p>
+            <h3>Does it collect my data?</h3>
+            <p>No. There's no telemetry, analytics, or tracking. See the <a href="privacy.html" style="color:var(--primary);">Privacy Policy</a> for full details.</p>
+            <h3>Can I use it on Mac or Linux?</h3>
+            <p>The packaged installer targets Windows 10/11. Running from source with Python may work on other platforms, though it isn't officially supported.</p>
+            <h3>Found a bug?</h3>
+            <p>Please use the <a href="report.html" style="color:var(--primary);">Report Issues</a> page or open an issue on GitHub.</p>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading docs...", "Preparing guides...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

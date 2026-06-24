@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Releases - My Toolbox</title>
+    <meta name="description" content="Download the latest version of My Toolbox - 21 Professional Desktop Tools.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: #f9f9f9;
+        }
+
+        /* ═══════ LOADING SCREEN ═══════ */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+
+        #loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-box {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-emoji {
+            font-size: 80px;
+            display: block;
+            animation: bounce 1.5s infinite;
+            margin-bottom: 16px;
+        }
+
+        .loading-title { font-size: 36px; font-weight: bold; margin-bottom: 8px; }
+        .loading-sub { font-size: 15px; opacity: 0.85; margin-bottom: 30px; }
+
+        .spinner {
+            width: 44px; height: 44px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .progress-wrap {
+            width: 260px; height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            margin: 0 auto 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%; width: 0%;
+            background: white;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .loading-msg { font-size: 13px; opacity: 0.75; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ═══════ MAIN CONTENT ═══════ */
+        #main-content { display: none; animation: fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            color: white;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 22px; font-weight: bold; text-decoration: none; color: white; }
+
+        .nav-links { display: flex; gap: 24px; list-style: none; }
+        .nav-links a {
+            color: white; text-decoration: none;
+            font-size: 14px; opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+        .nav-links a:hover { opacity: 1; }
+        .nav-links a.active {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        /* HERO */
+        .page-hero {
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .page-hero h1 { font-size: 40px; margin-bottom: 12px; }
+        .page-hero p { font-size: 17px; opacity: 0.9; }
+
+        /* CONTAINER */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* LATEST BADGE */
+        .latest-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .beta-badge {
+            background: var(--warning);
+            color: #333;
+        }
+
+        .old-badge {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* RELEASE CARD */
+        .releases-wrapper {
+            padding: 50px 20px;
+        }
+
+        .release-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            animation: slideIn 0.5s ease;
+        }
+
+        .release-card.latest {
+            border-top: 4px solid var(--secondary);
+        }
+
+        .release-card.old {
+            border-top: 4px solid #6c757d;
+            opacity: 0.85;
+        }
+
+        .release-header {
+            padding: 24px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .release-title { font-size: 24px; font-weight: bold; color: var(--primary); }
+
+        .release-meta {
+            font-size: 13px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .release-meta span { margin-right: 16px; }
+
+        .release-body { padding: 24px 30px; }
+
+        .release-body h4 {
+            font-size: 15px;
+            color: var(--text);
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        .release-body h4:first-child { margin-top: 0; }
+
+        /* Changelog */
+        .changelog {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .changelog li {
+            padding: 6px 0;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .changelog li:last-child { border-bottom: none; }
+
+        .changelog .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .tag-new { background: #d4edda; color: #155724; }
+        .tag-fix { background: #f8d7da; color: #721c24; }
+        .tag-improve { background: #d1ecf1; color: #0c5460; }
+        .tag-remove { background: #fff3cd; color: #856404; }
+
+        /* Download buttons */
+        .download-section {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .download-section h4 {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 14px;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-download {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+        }
+
+        .btn-github {
+            background: #24292e;
+            color: white;
+        }
+
+        .btn-github:hover {
+            background: #1a1e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-disabled {
+            background: #ccc;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        /* Asset list */
+        .asset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .asset-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .asset-icon { font-size: 20px; }
+        .asset-name { flex: 1; font-weight: 500; }
+        .asset-size { color: #888; font-size: 12px; }
+        .asset-download {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            gap: 24px;
+            padding: 16px 30px;
+            background: #f0f4f8;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: #555;
+            flex-wrap: wrap;
+        }
+
+        .stats-bar span { display: flex; align-items: center; gap: 6px; }
+
+        /* Tools count badge */
+        .tools-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tool-chip {
+            background: var(--light);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* Sidebar */
+        .page-layout {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-card h4 {
+            font-size: 15px;
+            color: var(--primary);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .version-list { list-style: none; }
+        .version-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .version-list li:last-child { border-bottom: none; }
+        .version-list a { color: var(--primary); text-decoration: none; }
+        .version-list a:hover { text-decoration: underline; }
+
+        /* FOOTER */
+        footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        footer p { color: #aaa; font-size: 14px; margin-bottom: 6px; }
+        footer a { color: var(--primary); text-decoration: none; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .page-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .release-header { flex-direction: column; }
+            .page-hero h1 { font-size: 28px; }
+            .loading-title { font-size: 26px; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">📦</span>
+        <h1 class="loading-title">Releases</h1>
+        <p class="loading-sub">Loading release history...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p class="loading-msg" id="loading-msg">Fetching releases...</p>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">🧰 My Toolbox</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="tools.html">Tools</a></li>
+                <li><a href="releases.html" class="active">Releases</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <div class="page-hero">
+        <h1>📦 Releases</h1>
+        <p>Download the latest version of My Toolbox or browse past releases</p>
+    </div>
+
+    <!-- PAGE LAYOUT -->
+    <div class="page-layout">
+
+        <!-- RELEASES MAIN -->
+        <div>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- RELEASE v2.0 - LATEST                 -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="release-card latest" id="v2.0">
+                <div class="release-header">
+                    <div>
+                        <div class="release-title">
+                            🧰 My Toolbox v2.0
+                            <span class="latest-badge">✅ Latest</span>
+                        </div>
+                        <div class="release-meta">
+                            <span>📅 June 20, 2026</span>
+                            <span>👨‍💻 Tanuj Gunasekara</span>
+                            <span>🏷️ Stable Release</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="release-body">
+
+                    <h4>📋 What's New in v2.0</h4>
+                    <ul class="changelog">
+                        <li><span class="tag tag-new">NEW</span> System Information Viewer with real-time CPU, RAM & storage monitoring</li>
+                        <li><span class="tag tag-new">NEW</span> About page with app info, credits, and live collection statistics</li>
+                        <li><span class="tag tag-new">NEW</span> DVR-MS & WTV format support for Recorded TV tab</li>
+                        <li><span class="tag tag-new">NEW</span> Professional EULA with Microsoft assets warning</li>
+                        <li><span class="tag tag-improve">IMPROVE</span> Fixed duplicate scanning in Sample Pictures tab</li>
+                        <li><span class="tag tag-improve">IMPROVE</span> Absolute path resolution for all asset folders</li>
+                        <li><span class="tag tag-improve">IMPROVE</span> Auto-organizer for all media types (pictures, videos, music, TV)</li>
+                        <li><span class="tag tag-fix">FIX</span> Pictures not loading in Retro Windows tab</li>
+                        <li><span class="tag tag-fix">FIX</span> Recorded TV not showing files</li>
+                        <li><span class="tag tag-fix">FIX</span> Removed unused QtChart and GPUtil imports causing errors</li>
+                        <li><span class="tag tag-fix">FIX</span> Path resolution when running from different directories</li>
+                    </ul>
+
+                    <h4>🛠️ All 21 Tools Included</h4>
+                    <div class="tools-chips">
+                        <span class="tool-chip">🤖 AI Chatbot</span>
+                        <span class="tool-chip">✍️ AI Writing</span>
+                        <span class="tool-chip">🧮 Calculator</span>
+                        <span class="tool-chip">📐 Unit Converter</span>
+                        <span class="tool-chip">💱 Currency</span>
+                        <span class="tool-chip">🔑 Password Gen</span>
+                        <span class="tool-chip">📝 Notes</span>
+                        <span class="tool-chip">⏱️ Timer</span>
+                        <span class="tool-chip">⏲️ Stopwatch</span>
+                        <span class="tool-chip">📷 QR Generator</span>
+                        <span class="tool-chip">🔍 QR Scanner</span>
+                        <span class="tool-chip">📄 PDF Tools</span>
+                        <span class="tool-chip">🖼️ Image Tools</span>
+                        <span class="tool-chip">📝 Text Tools</span>
+                        <span class="tool-chip">⚡ Productivity</span>
+                        <span class="tool-chip">💼 Business</span>
+                        <span class="tool-chip">👨‍💻 Developer</span>
+                        <span class="tool-chip">📚 Educational</span>
+                        <span class="tool-chip">💰 Financial</span>
+                        <span class="tool-chip">🎵 Retro Windows</span>
+                        <span class="tool-chip">🖥️ System Info</span>
+                    </div>
+
+                </div>
+
+                <!-- DOWNLOAD ASSETS -->
+                <div class="download-section">
+                    <h4>📥 Assets</h4>
+                    <div class="asset-list">
+                        <div class="asset-item">
+                            <span class="asset-icon">💻</span>
+                            <span class="asset-name">MyToolbox-v2.0-Setup.exe</span>
+                            <span class="asset-size">~120 MB</span>
+                            <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0">⬇️ Download</a>
+                        </div>
+                        <div class="asset-item">
+                            <span class="asset-icon">📄</span>
+                            <span class="asset-name">END-USER_LICENSE_AGREEMENT_v2.0.txt</span>
+                            <span class="asset-size">~45 KB</span>
+                            <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" class="asset-download">⬇️ Download</a>
+                        </div>
+                        <div class="asset-item">
+                            <span class="asset-icon">📝</span>
+                            <span class="asset-name">Source Code (.zip)</span>
+                            <span class="asset-size">GitHub</span>
+                            <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" class="asset-download">⬇️ Download</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATS BAR -->
+                <div class="stats-bar">
+                    <span>📦 21 Tools</span>
+                    <span>🎨 5 Themes</span>
+                    <span>🐍 Python 3.14</span>
+                    <span>🖥️ Windows 10/11</span>
+                    <span>📅 June 2026</span>
+                </div>
+            </div>
+
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- RELEASE v1.0                           -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="release-card old" id="v1.0">
+                <div class="release-header">
+                    <div>
+                        <div class="release-title">
+                            🧰 My Toolbox v1.0
+                            <span class="latest-badge old-badge">Initial Release</span>
+                        </div>
+                        <div class="release-meta">
+                            <span>📅 2025</span>
+                            <span>👨‍💻 Tanuj Gunasekara</span>
+                            <span>🏷️ Initial Release</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="release-body">
+
+                    <h4>📋 Initial Release</h4>
+                    <ul class="changelog">
+                        <li><span class="tag tag-new">NEW</span> First ever release of My Toolbox!</li>
+                        <li><span class="tag tag-new">NEW</span> 19 professional tools included</li>
+                        <li><span class="tag tag-new">NEW</span> AI Chatbot with Cerebras integration</li>
+                        <li><span class="tag tag-new">NEW</span> AI Writing Tools</li>
+                        <li><span class="tag tag-new">NEW</span> Calculator, Unit & Currency Converter</li>
+                        <li><span class="tag tag-new">NEW</span> Password Generator, Notes, Timer, Stopwatch</li>
+                        <li><span class="tag tag-new">NEW</span> QR Generator & Scanner</li>
+                        <li><span class="tag tag-new">NEW</span> PDF Tools, Image Tools, Text Tools</li>
+                        <li><span class="tag tag-new">NEW</span> Productivity, Business, Developer, Educational, Financial Tools</li>
+                        <li><span class="tag tag-new">NEW</span> 5 beautiful themes</li>
+                        <li><span class="tag tag-new">NEW</span> Home dashboard</li>
+                    </ul>
+
+                </div>
+
+                <div class="stats-bar">
+                    <span>📦 5 Tools</span>
+                    <span>🎨 0 Themes</span>
+                    <span>🐍 Python</span>
+                    <span>🖥️ Windows 10/11</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ══════════════════════════════════════ -->
+        <!-- SIDEBAR                                -->
+        <!-- ══════════════════════════════════════ -->
+        <div class="sidebar">
+
+            <!-- Download Latest -->
+            <div class="sidebar-card" style="border-top: 4px solid var(--secondary);">
+                <h4>⬇️ Latest Release</h4>
+                <p style="font-size:14px; margin-bottom:16px; color:#555;">
+                    <strong>v2.0</strong> — June 20, 2026<br>
+                    21 Tools • Stable Release
+                </p>
+                <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" class="btn btn-download" style="width:100%; justify-content:center;" target="_blank">
+                    📥 Download v2.0
+                </a>
+                <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0" class="btn btn-github" style="width:100%; justify-content:center; margin-top:10px;" target="_blank">
+                    ⭐ View on GitHub
+                </a>
+            </div>
+
+            <!-- Version History -->
+            <div class="sidebar-card">
+                <h4>📋 Version History</h4>
+                <ul class="version-list">
+                    <li>
+                        <a href="#v2.0">v2.0</a>
+                        <span class="latest-badge" style="font-size:10px;">Latest</span>
+                    </li>
+                    <li>
+                        <a href="#v1.0">v1.0</a>
+                        <span style="font-size:12px; color:#888;">Previous</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- System Requirements -->
+            <div class="sidebar-card">
+                <h4>💻 Requirements</h4>
+                <ul style="list-style:none; font-size:13px; line-height:2.2; color:#555;">
+                    <li>🖥️ Windows 10/11</li>
+                    <li>⚙️ Intel i5 (2nd Gen)+</li>
+                    <li>💾 8GB RAM minimum</li>
+                    <li>📁 500MB free space</li>
+                    <li>🌐 Internet (some tools)</li>
+                </ul>
+            </div>
+
+            <!-- Links -->
+            <div class="sidebar-card">
+                <h4>🔗 Quick Links</h4>
+                <ul style="list-style:none; font-size:13px; line-height:2.4;">
+                    <li><a href="index.html" style="color:var(--primary); text-decoration:none;">🏠 Home</a></li>
+                    <li><a href="features.html" style="color:var(--primary); text-decoration:none;">✨ Features</a></li>
+                    <li><a href="tools.html" style="color:var(--primary); text-decoration:none;">🛠️ All Tools</a></li>
+                    <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank" style="color:var(--primary); text-decoration:none;">📦 GitHub</a></li>
+                    <li><a href="about.html" style="color:var(--primary); text-decoration:none;">👨‍💻 About</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Tanuj • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+        <p style="margin-top:10px;"><a href="index.html">← Back to Home</a></p>
+    </footer>
+
+</div><!-- end main-content -->
+
+<script>
+    // Loading screen
+    const messages = ["Fetching releases...", "Loading history...", "Preparing assets...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+
+    const interval = setInterval(() => {
+        progress += 20;
+        if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[3];
+    }, 200);
+
+    window.addEventListener('load', () => {
+        clearInterval(interval);
+        fill.style.width = '100%';
+        msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            const screen = document.getElementById('loading-screen');
+            const main = document.getElementById('main-content');
+            screen.classList.add('fade-out');
+            main.style.display = 'block';
+            setTimeout(() => { screen.style.display = 'none'; }, 600);
+        }, 600);
+    });
+</script>
+
+</body>
+</html>

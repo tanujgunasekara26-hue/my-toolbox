@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting - My Toolbox</title>
+    <meta name="description" content="Troubleshooting guide for My Toolbox issues.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0078d7;
+            --primary-dark: #005a9e;
+            --secondary: #28a745;
+            --light: #f5f5f5;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: #f9f9f9; }
+
+        /* LOADING */
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:80px; display:block; animation:bounce 1.5s infinite; margin-bottom:16px; }
+        .loading-title { font-size:36px; font-weight:bold; margin-bottom:8px; }
+        .loading-sub { font-size:15px; opacity:0.85; margin-bottom:30px; }
+        .spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 20px; }
+        .progress-wrap { width:260px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 12px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:13px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+
+        /* HEADER */
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:24px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+
+        /* HERO */
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:60px 20px; text-align:center; }
+        .page-hero h1 { font-size:38px; margin-bottom:12px; }
+        .page-hero p { font-size:16px; opacity:0.9; }
+
+        .container { max-width:900px; margin:0 auto; padding:50px 20px; }
+
+        .card { background:white; border-radius:12px; padding:30px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid var(--border); margin-bottom:24px; }
+        .card h2 { font-size:20px; color:var(--primary); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+        .card h3 { font-size:16px; color:var(--text); margin:20px 0 10px; }
+        .card p { font-size:14px; color:#444; margin-bottom:12px; }
+        .card ol, .card ul { margin:10px 0 14px 22px; font-size:14px; color:#444; }
+        .card li { margin-bottom:8px; line-height:1.8; }
+
+        /* ISSUE CARD */
+        .issue-card { background:white; border-left:4px solid #ff6b6b; border-radius:8px; padding:20px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+        .issue-card.warning { border-left-color:#ffc107; }
+        .issue-card.info { border-left-color:var(--primary); }
+        .issue-card h4 { color:#333; margin-bottom:8px; font-size:15px; }
+        .issue-card p { font-size:13px; color:#666; margin-bottom:6px; }
+        .issue-card strong { color:var(--primary); }
+
+        /* CODE BLOCK */
+        .code-block {
+            background:#f5f5f5; border:1px solid var(--border); border-radius:6px;
+            padding:14px; margin:12px 0; font-family:'Courier New', monospace;
+            font-size:13px; color:#333; overflow-x:auto; line-height:1.5;
+        }
+
+        /* INFO BOX */
+        .info-box { background:#e7f3ff; border:1px solid #b3d9ff; border-left:4px solid var(--primary); border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#004085; }
+        .warning-box { background:#fff3cd; border:1px solid #ffc107; border-left:4px solid #ffc107; border-radius:6px; padding:16px; margin:14px 0; font-size:13px; color:#856404; }
+
+        /* FOOTER */
+        footer { background:#1e1e1e; color:white; padding:50px 20px 20px; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:1200px; margin:0 auto 40px; }
+        .footer-col h4 { color:var(--primary); margin-bottom:14px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:8px; }
+        .footer-col a { color:#aaa; text-decoration:none; transition:color 0.2s; }
+        .footer-col a:hover { color:white; }
+        .footer-bottom { border-top:1px solid #444; padding-top:20px; text-align:center; color:#aaa; max-width:1200px; margin:0 auto; }
+        .footer-bottom p { margin-bottom:6px; font-size:14px; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size:28px; }
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">🔧</span>
+        <h1 class="loading-title">Troubleshooting</h1>
+        <p class="loading-sub">Loading solutions...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="documentation.html">Docs</a></li>
+            <li><a href="report.html">Report</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>🔧 Troubleshooting</h1>
+    <p>Common issues and solutions</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Installation Issues</h2>
+
+        <div class="issue-card warning">
+            <h4>❌ Windows SmartScreen Warning</h4>
+            <p><strong>Issue:</strong> Windows blocks the installer saying "Windows protected your PC"</p>
+            <p><strong>Cause:</strong> Fresh builds sometimes trigger false positives. Totally harmless.</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Click <strong>"More info"</strong> on the warning</li>
+                <li>Click <strong>"Run anyway"</strong> at the bottom right</li>
+                <li>Installation proceeds normally</li>
+            </ol>
+        </div>
+
+        <div class="issue-card warning">
+            <h4>❌ Installer Won't Start / "File Corrupted"</h4>
+            <p><strong>Cause:</strong> Download was incomplete or corrupted</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Delete the downloaded .exe file</li>
+                <li>Re-download from <a href="download.html" style="color:var(--primary);">the Download page</a></li>
+                <li>Verify file size matches (should be ~50-80 MB)</li>
+                <li>Try installing again</li>
+            </ol>
+        </div>
+
+        <div class="issue-card warning">
+            <h4>❌ "Permission Denied" During Install</h4>
+            <p><strong>Cause:</strong> Insufficient permissions or file in use</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Right-click installer → <strong>"Run as administrator"</strong></li>
+                <li>Close all other running instances of My Toolbox</li>
+                <li>Try again</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Launch & Crash Issues</h2>
+
+        <div class="issue-card warning">
+            <h4>❌ App Won't Start / Crashes Immediately</h4>
+            <p><strong>Cause:</strong> Missing dependencies or corrupted installation</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Uninstall My Toolbox via Control Panel → Programs → Programs and Features</li>
+                <li>Delete folder: <code>%APPDATA%\MyToolbox</code></li>
+                <li>Restart your computer</li>
+                <li>Re-download and install the latest version</li>
+            </ol>
+        </div>
+
+        <div class="issue-card warning">
+            <h4>❌ "Module Not Found" Error</h4>
+            <p><strong>Cause:</strong> Python dependency missing (if running from source)</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">pip install -r requirements.txt --break-system-packages</div>
+            <p>Then restart My Toolbox.</p>
+        </div>
+
+        <div class="issue-card warning">
+            <h4>❌ App Hangs / Freezes on Startup</h4>
+            <p><strong>Cause:</strong> Corrupted settings or slow system</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Force close My Toolbox (Ctrl+Alt+Delete, Task Manager)</li>
+                <li>Delete: <code>%APPDATA%\MyToolbox\data\config.ini</code></li>
+                <li>Re-open My Toolbox (it will rebuild settings)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Performance Issues</h2>
+
+        <div class="issue-card info">
+            <h4>🐌 App is Slow / Laggy</h4>
+            <p><strong>Cause:</strong> Low system resources or background processes</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Check CPU/RAM in System Info tool (built into My Toolbox)</li>
+                <li>Close other heavy applications (Chrome, video editors, etc.)</li>
+                <li>Restart your computer</li>
+                <li>Check for Windows updates and install them</li>
+            </ul>
+        </div>
+
+        <div class="issue-card info">
+            <h4>🐌 QR Scanner is Slow</h4>
+            <p><strong>Cause:</strong> Your webcam or CPU is slow, or poor lighting</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Ensure good lighting on the QR code</li>
+                <li>Hold the code steady for 2-3 seconds</li>
+                <li>Try scanning from a file instead of webcam</li>
+                <li>Close other apps using the webcam</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>AI & Internet Issues</h2>
+
+        <div class="issue-card warning">
+            <h4>🤖 AI Tools Show "Authentication Failed"</h4>
+            <p><strong>Cause:</strong> Cerebras API key not set or incorrect</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Verify you set the <code>CEREBRAS_API_KEY</code> environment variable</li>
+                <li>Confirm the key is correct (copy from Cerebras Cloud again if unsure)</li>
+                <li>Restart My Toolbox after setting the environment variable</li>
+                <li>See <a href="cerebras-setup.html" style="color:var(--primary);">Setting Up Cerebras AI</a> for detailed steps</li>
+            </ol>
+        </div>
+
+        <div class="issue-card warning">
+            <h4>🤖 AI Tools Show "Region Restricted"</h4>
+            <p><strong>Cause:</strong> You're outside the United States</p>
+            <p><strong>Solution:</strong> AI features are U.S.-only due to export regulations. No workaround is permitted. Use the other 19 tools instead.</p>
+        </div>
+
+        <div class="issue-card warning">
+            <h4>💱 Currency Converter Shows "No Data"</h4>
+            <p><strong>Cause:</strong> No internet connection or API is down</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Check your internet connection</li>
+                <li>Try again in a few seconds</li>
+                <li>If persists, check <a href="https://status.frankfurter.app" target="_blank" style="color:var(--primary);">Frankfurter API status</a></li>
+            </ol>
+        </div>
+
+        <div class="issue-card info">
+            <h4>⏳ AI Responses are Slow</h4>
+            <p><strong>Cause:</strong> Network latency or API load</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Check your internet speed (should be at least 5 Mbps)</li>
+                <li>Cerebras API may be under heavy load — wait a moment and try again</li>
+                <li>Shorter prompts usually respond faster</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Tool-Specific Issues</h2>
+
+        <div class="issue-card info">
+            <h4>📷 QR Scanner Says "No Camera Detected"</h4>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Check Device Manager (Win + X → Device Manager)</li>
+                <li>Look for your webcam under "Cameras"</li>
+                <li>If marked with ⚠️, update drivers</li>
+                <li>Make sure My Toolbox has camera permissions (Settings → Privacy → Camera)</li>
+                <li>Restart My Toolbox</li>
+            </ol>
+        </div>
+
+        <div class="issue-card info">
+            <h4>🖼️ Image Tools Won't Open</h4>
+            <p><strong>Cause:</strong> Missing image file or unsupported format</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Only supports: PNG, JPG, BMP, GIF</li>
+                <li>File must exist and not be in use by another app</li>
+                <li>Try selecting a different image first</li>
+            </ul>
+        </div>
+
+        <div class="issue-card info">
+            <h4>📄 PDF Tools Say "File Corrupted"</h4>
+            <p><strong>Cause:</strong> PDF is truly corrupted or not a valid PDF</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Try opening the PDF in Adobe Reader first to verify it's valid</li>
+                <li>If Reader can't open it, the PDF is corrupted — recreate it</li>
+                <li>Ensure you have file permissions (not read-only)</li>
+            </ul>
+        </div>
+
+        <div class="issue-card info">
+            <h4>📝 Notes Won't Save</h4>
+            <p><strong>Cause:</strong> File permissions issue or disk full</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Check available disk space: <code>C:</code> drive should have at least 100 MB free</li>
+                <li>Ensure folder permissions: <code>%APPDATA%\MyToolbox</code> should be writable</li>
+                <li>Try copying your notes to Notepad, then back into My Toolbox</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Display & Theme Issues</h2>
+
+        <div class="issue-card info">
+            <h4>🎨 Theme Won't Change</h4>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Go to Settings → Appearance</li>
+                <li>Select a different theme</li>
+                <li>Click <strong>"Apply"</strong> (or it applies automatically)</li>
+                <li>Restart My Toolbox if it doesn't update</li>
+            </ol>
+        </div>
+
+        <div class="issue-card info">
+            <h4>📺 UI Text is Blurry or Too Small</h4>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Go to Settings → Appearance → Font Size</li>
+                <li>Increase to 110% or 120%</li>
+                <li>Restart My Toolbox</li>
+            </ul>
+        </div>
+
+        <div class="issue-card info">
+            <h4>🖥️ App Opens Off-Screen</h4>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Right-click My Toolbox in taskbar</li>
+                <li>Select <strong>"Move"</strong></li>
+                <li>Press arrow keys to reposition</li>
+                <li>Or delete: <code>%APPDATA%\MyToolbox\data\config.ini</code> to reset position</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Data & Settings Issues</h2>
+
+        <div class="issue-card warning">
+            <h4>💾 Notes Disappeared!</h4>
+            <p><strong>Cause:</strong> Accidental deletion or cleared cache</p>
+            <p><strong>What to Try:</strong></p>
+            <ol>
+                <li>Check <code>%APPDATA%\MyToolbox\data\notes.txt</code> — if file is there but empty, recovery may be difficult</li>
+                <li>Check Windows File History or Recycle Bin</li>
+                <li>Unfortunately, if not backed up, recovery may not be possible</li>
+            </ol>
+            <p><strong>Prevention:</strong> Back up notes regularly to a safe location.</p>
+        </div>
+
+        <div class="issue-card info">
+            <h4>⚙️ Settings Keep Resetting</h4>
+            <p><strong>Cause:</strong> File permissions or corrupted config</p>
+            <p><strong>Solution:</strong></p>
+            <ol>
+                <li>Close My Toolbox</li>
+                <li>Delete: <code>%APPDATA%\MyToolbox\data\config.ini</code></li>
+                <li>Reopen My Toolbox and reconfigure settings</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Still Having Issues?</h2>
+
+        <h3>Report a Bug</h3>
+        <p>If none of the above solutions work:</p>
+        <ol>
+            <li>Go to <a href="report.html" style="color:var(--primary);">the Report Issues page</a></li>
+            <li>Describe the problem in detail</li>
+            <li>Include: OS version, My Toolbox version, steps to reproduce</li>
+            <li>Submit via GitHub Issues</li>
+        </ol>
+
+        <h3>Get Help</h3>
+        <ul>
+            <li>📚 <a href="documentation.html" style="color:var(--primary);">Read the Documentation</a></li>
+            <li>❓ <a href="faq.html" style="color:var(--primary);">Check the FAQ</a></li>
+            <li>🐛 <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/issues" target="_blank" style="color:var(--primary);">Browse GitHub Issues</a></li>
+        </ul>
+
+        <div class="info-box">
+            💡 <strong>Pro Tip:</strong> When reporting issues, include the error message verbatim and any console output (if running from source).
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>🧰 My Toolbox</h4>
+            <ul>
+                <li><a href="features.html">✨ Features</a></li>
+                <li><a href="tools.html">🛠️ Tools</a></li>
+                <li><a href="download.html">⬇️ Download</a></li>
+                <li><a href="about.html">👨‍💻 About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>📚 Resources</h4>
+            <ul>
+                <li><a href="https://github.com/tanujgunasekara26-hue" target="_blank">GitHub Repository</a></li>
+                <li><a href="documentation.html">📚 Documentation</a></li>
+                <li><a href="contribute.html">🤝 Contribute</a></li>
+                <li><a href="report.html">🐛 Report Issues</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>⚖️ Legal</h4>
+            <ul>
+                <li><a href="eula.html">⚖️ EULA</a></li>
+                <li><a href="privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="terms.html">📋 Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+        <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+    </div>
+</footer>
+
+</div>
+
+<script>
+    const messages = ["Loading solutions...", "Gathering fixes...", "Almost ready...", "Ready! 🎉"];
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 20; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+        msg.textContent = messages[Math.floor(progress / 25)] || messages[2];
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>

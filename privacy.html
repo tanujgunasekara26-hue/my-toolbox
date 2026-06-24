@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - My Toolbox</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #0078d7; --primary-dark: #005a9e; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f9f9f9; color: #333; }
+        #loading-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#0078d7,#005a9e); display:flex; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.6s ease; }
+        #loading-screen.fade-out { opacity:0; pointer-events:none; }
+        .loading-box { text-align:center; color:white; }
+        .loading-emoji { font-size:70px; display:block; animation:bounce 1.5s infinite; margin-bottom:14px; }
+        .loading-title { font-size:30px; font-weight:bold; margin-bottom:6px; }
+        .loading-sub { font-size:14px; opacity:0.85; margin-bottom:26px; }
+        .spinner { width:40px; height:40px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 18px; }
+        .progress-wrap { width:240px; height:5px; background:rgba(255,255,255,0.2); border-radius:10px; margin:0 auto 10px; overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:white; border-radius:10px; transition:width 0.4s ease; }
+        .loading-msg { font-size:12px; opacity:0.75; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        #main-content { display:none; animation:fadeIn 0.6s ease; }
+        header { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        nav { max-width:1100px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:20px; font-weight:bold; text-decoration:none; color:white; }
+        .nav-links { display:flex; gap:22px; list-style:none; }
+        .nav-links a { color:white; text-decoration:none; font-size:14px; opacity:0.9; transition:opacity 0.2s; }
+        .nav-links a:hover { opacity:1; }
+        .nav-links a.active { background:rgba(255,255,255,0.2); padding:5px 12px; border-radius:20px; }
+        .page-hero { background:linear-gradient(135deg,#0078d7,#005a9e); color:white; padding:50px 20px; text-align:center; }
+        .page-hero h1 { font-size:36px; margin-bottom:10px; }
+        .page-hero p { font-size:15px; opacity:0.9; }
+        .container { max-width:900px; margin:40px auto; padding:0 20px 60px; }
+        .legal-card { background:white; border-radius:12px; padding:40px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border:1px solid #e0e0e0; }
+        .meta { background:#f0f4f8; border-radius:8px; padding:16px 20px; margin-bottom:30px; font-size:13px; color:#555; line-height:2; }
+        .meta strong { color:var(--primary); }
+        .info-box { background:#d4edda; border:1px solid #28a745; border-left:5px solid #28a745; border-radius:6px; padding:16px 20px; margin:20px 0; font-size:14px; }
+        .info-box strong { color:#155724; }
+        .warning-box { background:#fff3cd; border:1px solid #ffc107; border-left:5px solid #ffc107; border-radius:6px; padding:16px 20px; margin:20px 0; font-size:14px; }
+        .warning-box strong { color:#856404; }
+        .legal-section { margin:30px 0; }
+        .legal-section h2 { font-size:18px; color:var(--primary); border-bottom:2px solid var(--primary); padding-bottom:8px; margin-bottom:16px; }
+        .legal-section h3 { font-size:15px; color:#333; margin:16px 0 10px; font-weight:600; }
+        .legal-section p { font-size:14px; line-height:1.8; color:#444; margin-bottom:12px; }
+        .legal-section ul { list-style:none; margin:10px 0; }
+        .legal-section ul li { font-size:14px; padding:6px 0; color:#444; border-bottom:1px solid #f5f5f5; display:flex; gap:8px; align-items:flex-start; }
+        .legal-section ul li:last-child { border-bottom:none; }
+        .check { color:#28a745; font-weight:bold; }
+        .cross { color:#dc3545; font-weight:bold; }
+        .third-party-box { background:#f8f9fa; border:1px solid #e0e0e0; border-radius:8px; padding:20px; margin:16px 0; }
+        .third-party-box h4 { color:var(--primary); margin-bottom:10px; }
+        .third-party-box p { font-size:13px; color:#555; line-height:1.8; }
+        footer { background:#1e1e1e; color:white; padding:30px 20px; text-align:center; }
+        .footer-links { display:flex; justify-content:center; gap:24px; margin-bottom:16px; flex-wrap:wrap; }
+        .footer-links a { color:#aaa; text-decoration:none; font-size:13px; transition:color 0.2s; }
+        .footer-links a:hover { color:white; }
+        footer p { color:#aaa; font-size:13px; margin-bottom:4px; }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div class="loading-box">
+        <span class="loading-emoji">🔒</span>
+        <h1 class="loading-title">Privacy Policy</h1>
+        <p class="loading-sub">Loading privacy information...</p>
+        <div class="spinner"></div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="loading-msg" id="loading-msg">Please wait...</p>
+    </div>
+</div>
+
+<div id="main-content">
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">🧰 My Toolbox</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="releases.html">Releases</a></li>
+            <li><a href="eula.html">EULA</a></li>
+            <li><a href="privacy.html" class="active">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1>🔒 Privacy Policy</h1>
+    <p>How My Toolbox handles your data and privacy</p>
+</div>
+
+<div class="container">
+    <div class="legal-card">
+
+        <div class="meta">
+            <strong>Application:</strong> My Toolbox Desktop Application &nbsp;|&nbsp;
+            <strong>Last Updated:</strong> June 20, 2026 &nbsp;|&nbsp;
+            <strong>Effective:</strong> Upon Installation
+        </div>
+
+        <div class="info-box">
+            ✅ <strong>GOOD NEWS:</strong> My Toolbox does NOT collect, store, or transmit your personal data. There is no account registration, no telemetry, and no tracking of any kind.
+        </div>
+
+        <div class="legal-section">
+            <h2>1. What We Do NOT Collect</h2>
+            <p>My Toolbox is designed with privacy first. We do NOT collect:</p>
+            <ul>
+                <li><span class="check">✅</span> Personal identifying information (name, email, address)</li>
+                <li><span class="check">✅</span> Usage analytics or telemetry</li>
+                <li><span class="check">✅</span> Keystroke or screen recording data</li>
+                <li><span class="check">✅</span> Location or IP address data</li>
+                <li><span class="check">✅</span> Browser or device fingerprints</li>
+                <li><span class="check">✅</span> Files or documents you process</li>
+                <li><span class="check">✅</span> Notes or content you create</li>
+                <li><span class="check">✅</span> Crash reports or diagnostics</li>
+                <li><span class="check">✅</span> Browsing history or habits</li>
+            </ul>
+        </div>
+
+        <div class="legal-section">
+            <h2>2. What the App Stores Locally</h2>
+            <p>Some data is stored <strong>locally on your computer only</strong> — never sent to us:</p>
+            <ul>
+                <li><span class="check">📝</span> Notes (saved in plaintext on your device)</li>
+                <li><span class="check">📝</span> App preferences and settings</li>
+                <li><span class="check">📝</span> Generated QR codes (not stored unless saved by you)</li>
+            </ul>
+            <div class="warning-box">
+                ⚠️ <strong>WARNING:</strong> Local files are stored in plaintext with NO encryption. Do not store sensitive personal information in the Notes tool.
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2>3. Third-Party Services</h2>
+            <p>Some features connect to third-party services. When you use these features, data is sent to those services — NOT to us.</p>
+
+            <div class="third-party-box">
+                <h4>🤖 Cerebras API (AI Chatbot & Writing Tools)</h4>
+                <p>
+                    <strong>What is sent:</strong> Your text prompts and messages<br>
+                    <strong>Purpose:</strong> AI language model processing<br>
+                    <strong>Geographic restriction:</strong> United States only<br>
+                    <strong>Their Privacy Policy:</strong> <a href="https://www.cerebras.net/privacy" target="_blank">cerebras.net/privacy</a><br>
+                    <strong>Note:</strong> Cerebras may log or store your prompts per their own policy. Review it carefully.
+                </p>
+            </div>
+
+            <div class="third-party-box">
+                <h4>💱 Frankfurter API (Currency Converter)</h4>
+                <p>
+                    <strong>What is sent:</strong> Currency conversion queries<br>
+                    <strong>Purpose:</strong> Real-time exchange rate data<br>
+                    <strong>Data source:</strong> European Central Bank<br>
+                    <strong>Their Website:</strong> <a href="https://www.frankfurter.app" target="_blank">frankfurter.app</a><br>
+                    <strong>Note:</strong> Queries are minimal and contain no personal data.
+                </p>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2>4. Your Rights</h2>
+            <ul>
+                <li><span class="check">✅</span> You can delete locally stored files at any time</li>
+                <li><span class="check">✅</span> Uninstalling the Software removes the app (local data files may remain)</li>
+                <li><span class="check">✅</span> No account to delete — we hold no data about you</li>
+                <li><span class="check">✅</span> No opt-out needed — we never collected data to begin with</li>
+            </ul>
+        </div>
+
+        <div class="legal-section">
+            <h2>5. Security</h2>
+            <p>Since we don't collect data, there is no server-side data to breach. However, your local files are only as secure as your computer. We recommend:</p>
+            <ul>
+                <li><span class="check">🔐</span> Use full-disk encryption (BitLocker)</li>
+                <li><span class="check">🔐</span> Use a strong computer login password</li>
+                <li><span class="check">🔐</span> Keep your OS and antivirus updated</li>
+                <li><span class="check">🔐</span> Do not store sensitive data in the Notes tool</li>
+            </ul>
+        </div>
+
+        <div class="legal-section">
+            <h2>6. Children's Privacy</h2>
+            <p>My Toolbox is not directed at children under 13. We do not knowingly collect data from anyone, including children. The Software should be used by adults or with parental supervision.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>7. Changes to This Policy</h2>
+            <p>We may update this Privacy Policy at any time. The updated version will be reflected on this page with a new "Last Updated" date. Continued use of the Software constitutes acceptance of any changes.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>8. Contact</h2>
+            <p>For privacy concerns or questions, contact the Developer via the GitHub repository.</p>
+        </div>
+
+        <p style="text-align:center; color:#888; font-size:13px; margin-top:30px; padding-top:20px; border-top:1px solid #eee;">
+            Last Updated: June 20, 2026 &nbsp;|&nbsp; © 2026 Tanuj Gunasekara. All rights reserved.
+        </p>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="releases.html">📦 Releases</a>
+        <a href="eula.html">⚖️ EULA</a>
+        <a href="privacy.html">🔒 Privacy Policy</a>
+        <a href="terms.html">📋 Terms of Service</a>
+    </div>
+    <p>© 2026 Tanuj Gunasekara • Made with ❤️ in Sri Lanka 🇱🇰</p>
+    <p>Windows® is a registered trademark of Microsoft Corporation.</p>
+</footer>
+
+</div>
+
+<script>
+    let progress = 0;
+    const fill = document.getElementById('progress-fill');
+    const msg = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+        progress += 25; if (progress > 90) progress = 90;
+        fill.style.width = progress + '%';
+    }, 200);
+    window.addEventListener('load', () => {
+        clearInterval(interval); fill.style.width = '100%'; msg.textContent = 'Ready! 🎉';
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('fade-out');
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 600);
+        }, 500);
+    });
+</script>
+</body>
+</html>
