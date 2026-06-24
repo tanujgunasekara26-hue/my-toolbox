@@ -59,7 +59,7 @@
 <h2>📥 Installation</h2>
 <h3>Pre-built Executable (Recommended)</h3>
 <ol>
-<li>Download the latest <code>.exe</code> from <a href="https://github.com/yourusername/my-toolbox/releases">Releases</a></li>
+<li>Download the latest <code>.exe</code> from <a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases/tag/My-toolbox-v.2.0">Releases</a></li>
 <li>Run <code>MyToolbox-Setup.exe</code> and follow the prompts</li>
 <li>Launch from Start Menu or Desktop shortcut</li>
 <li>Select a theme and start using all 21 tools</li>
@@ -82,7 +82,7 @@ python main.py
 <li><strong>Launch My Toolbox</strong> — Open the app from Start Menu or your desktop</li>
 <li><strong>Pick a Theme</strong> — Choose from 5 built-in light/dark variants (settings menu)</li>
 <li><strong>Explore Tools</strong> — Click any tool card on the dashboard to get started</li>
-<li><strong>Read Docs</strong> — Visit <a href="https://claude.ai/chat/website/documentation.html">documentation.html</a> or the in-app Help menu for detailed guides</li>
+<li><strong>Read Docs</strong> — Visit <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/documentation.html">documentation.html</a> or the in-app Help menu for detailed guides</li>
 </ol>
 <h3>Set Up AI Features (US Only)</h3>
 <p>The AI Chatbot and AI Writing Tools require a <strong>Cerebras API key</strong>:</p>
@@ -158,7 +158,7 @@ Frankfurter API | Live currency exchange rates
 <li><strong>Local Storage Only</strong> — Notes and preferences stored locally in plaintext</li>
 <li><strong>API Transparency</strong> — See exactly what's sent to Cerebras and Frankfurter</li>
 </ul>
-<p>For details, see <a href="https://claude.ai/chat/website/privacy.html">Privacy Policy</a>.</p>
+<p>For details, see <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/privacy.html">Privacy Policy</a>.</p>
 <hr>
 <h2>🐛 Known Issues</h2>
 <ul>
@@ -166,7 +166,7 @@ Frankfurter API | Live currency exchange rates
 <li><strong>AI Features US-Only</strong> — Geographic restriction enforced by Cerebras API</li>
 <li><strong>Antivirus Alerts</strong> — May occur with new builds; use the official GitHub releases</li>
 </ul>
-<p>See the full <a href="https://claude.ai/chat/website/report.html">Known Issues</a> list in the app.</p>
+<p>See the full <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/report.html">Known Issues</a> list in the app.</p>
 <hr>
 <h2>🤝 Contributing</h2>
 <p>We welcome contributions! Here's how:</p>
@@ -185,27 +185,26 @@ Frankfurter API | Live currency exchange rates
 <li>🔄 Performance optimization</li>
 <li>🌍 Translation/localization</li>
 </ul>
-<p>See <a href="https://claude.ai/chat/CONTRIBUTING.md">CONTRIBUTING.md</a> (coming soon) for detailed guidelines.</p>
+<p>See <a href="#">CONTRIBUTING.md</a> (coming soon) for detailed guidelines.</p>
 <hr>
 <h2>📚 Documentation</h2>
 <ul>
-<li><strong><a href="https://claude.ai/chat/website/documentation.html">In-App Help</a></strong> — Complete user guides and troubleshooting</li>
-<li><strong><a href="https://claude.ai/chat/website/features.html">Features</a></strong> — What makes My Toolbox special</li>
-<li><strong><a href="https://claude.ai/chat/website/tools.html">Tools</a></strong> — Detailed breakdown of all 21 tools</li>
-<li><strong><a href="https://claude.ai/chat/website/index.html">Website</a></strong> — Landing page and marketing site</li>
+<li><strong><a href="https://tanujgunasekara26-hue.github.io/my-toolbox/documentation.html">In-App Help</a></strong> — Complete user guides and troubleshooting</li>
+<li><strong><a href="https://tanujgunasekara26-hue.github.io/my-toolbox/features.html">Features</a></strong> — What makes My Toolbox special</li>
+<li><strong><a href="https://tanujgunasekara26-hue.github.io/my-toolbox/tools.html">Tools</a></strong> — Detailed breakdown of all 21 tools</li>
+<li><strong><a href="https://tanujgunasekara26-hue.github.io/my-toolbox/index.html">Website</a></strong> — Landing page and marketing site</li>
 </ul>
 <hr>
 <h2>📝 License</h2>
-<p>My Toolbox is licensed under the <strong>MIT License</strong> — see <a href="https://claude.ai/chat/LICENSE">LICENSE</a> for details.</p>
+<p>My Toolbox is licensed under the <strong>MIT License</strong> — see <a href="#">LICENSE</a> for details.</p>
 <p><strong>Important Note:</strong> This software includes assets belonging to Microsoft Corporation (Windows XP/Vista sounds, wallpapers) for personal, non-commercial use only. Windows® is a registered trademark of Microsoft Corporation.</p>
 <hr>
 <h2>👨‍💻 About the Developer</h2>
 <p><strong>Tanuj</strong> from Sri Lanka 🇱🇰</p>
 <p>Passionate about creating useful, no-nonsense tools and exploring retro computing. Built My Toolbox to bring together the everyday utilities everyone needs, wrapped in a modern, beautiful interface.</p>
 <ul>
-<li>🌐 <strong>Portfolio:</strong> <a href="https://your-website.com/">your-website.com</a></li>
-<li>💼 <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/yourprofile">your-linkedin</a></li>
-<li>🐦 <strong>Twitter:</strong> <a href="https://twitter.com/yourhandle">@yourhandle</a></li>
+<li>🌐 <strong>YouTube:</strong> <a href="www.youtube.com/@Tom50056"> </a></li>
+
 </ul>
 <hr>
 <h2>🙏 Credits &amp; Acknowledgments</h2>
@@ -220,10 +219,10 @@ Frankfurter API | Live currency exchange rates
 <hr>
 <h2>💬 Questions? Issues? Ideas?</h2>
 <ul>
-<li>🐛 <strong>Found a bug?</strong> — <a href="https://claude.ai/chat/website/report.html">Report it here</a></li>
-<li>📚 <strong>Need help?</strong> — Check <a href="https://claude.ai/chat/website/documentation.html">Documentation</a></li>
+<li>🐛 <strong>Found a bug?</strong> — <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/report.html">Report it here</a></li>
+<li>📚 <strong>Need help?</strong> — Check <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/documentation.html">Documentation</a></li>
 <li>💡 <strong>Have a feature idea?</strong> — Open a GitHub Issue</li>
-<li>💬 <strong>Want to contribute?</strong> — See <a href="https://claude.ai/chat/da5c92b9-075f-4e22-8b74-4145c423a449#-contributing">Contributing</a></li>
+<li>💬 <strong>Want to contribute?</strong> — See <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/contribute.html">Contributing</a></li>
 </ul>
 <hr>
 <h2>🚀 Roadmap (Future Plans)</h2>
@@ -240,8 +239,8 @@ Frankfurter API | Live currency exchange rates
 <hr>
 &lt;div align="center"&gt;
 <p><strong>Made with ❤️ in Sri Lanka 🇱🇰</strong></p>
-<p><a href="https://github.com/yourusername/my-toolbox">⭐ Star on GitHub</a> if you find this useful!</p>
-<p><a href="https://github.com/yourusername/my-toolbox/releases">Download Now</a> · <a href="https://your-website.com/">View Website</a> · <a href="https://claude.ai/chat/website/documentation.html">Read Docs</a></p>
+<p><a href="https://github.com/tanujgunasekara26-hue/my-toolbox">⭐ Star on GitHub</a> if you find this useful!</p>
+<p><a href="https://github.com/tanujgunasekara26-hue/my-toolbox/releases">Download Now</a> · <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/">View Website</a> · <a href="https://tanujgunasekara26-hue.github.io/my-toolbox/documentation.html">Read Docs</a></p>
 &lt;/div&gt;</body></html><!--EndFragment-->
 </body>
 </html># 🧰 My Toolbox
@@ -302,7 +301,7 @@ My Toolbox packs **21 professional tools** across seven categories, all accessib
 ## 📥 Installation
 
 ### Pre-built Executable (Recommended)
-1. Download the latest `.exe` or (installer file) from [[Releases](https://github.com/yourusername/my-toolbox/releases)](https://github.com/yourusername/my-toolbox/releases)
+1. Download the latest `.exe` or (installer file) from [[Releases](https://github.com/tanujgunasekara26-hue/my-toolbox/releases)](https://github.com/yourusername/my-toolbox/releases)
 2. Run `MyToolbox-Setup.exe` and follow the prompts
 3. Launch from Start Menu or Desktop shortcut
 4. Select a theme and start using all 21 tools
@@ -329,11 +328,11 @@ python main.py
 1. **Launch My Toolbox** — Open the app from Start Menu or your desktop
 2. **Pick a Theme** — Choose from 5 built-in light/dark variants (settings menu)
 3. **Explore Tools** — Click any tool card on the dashboard to get started
-4. **Read Docs** — Visit [[documentation.html](https://claude.ai/chat/website/documentation.html)](./website/documentation.html) or the in-app Help menu for detailed guides
+4. **Read Docs** — Visit [[documentation.html](https://tanujgunasekara26-hue.github.io/my-toolbox/documentation.html)] or the in-app Help menu for detailed guides
 
 ### Set Up AI Features (US Only)
 The AI Chatbot and AI Writing Tools require a **Cerebras API key**:
-1. Sign up at [[cloud.cerebras.ai](https://cloud.cerebras.ai/)](https://cloud.cerebras.ai)
+1. Sign up at [[cloud.cerebras.ai](https://cloud.cerebras.ai/)]
 2. Generate an API key
 3. Add it as an environment variable: `CEREBRAS_API_KEY=your-key-here`
 4. Restart My Toolbox
@@ -414,7 +413,7 @@ my-toolbox/
 - **Local Storage Only** — Notes and preferences stored locally in plaintext
 - **API Transparency** — See exactly what's sent to Cerebras and Frankfurter
 
-For details, see [[Privacy Policy](https://claude.ai/chat/website/privacy.html)](./website/privacy.html).
+For details, see [[Privacy Policy](https://tanujgunasekara26-hue.github.io/my-toolbox/privacy.html) .
 
 ---
 
@@ -424,7 +423,7 @@ For details, see [[Privacy Policy](https://claude.ai/chat/website/privacy.html)]
 - **AI Features US-Only** — Geographic restriction enforced by Cerebras API
 - **Antivirus Alerts** — May occur with new builds; use the official GitHub releases
 
-See the full [[Known Issues](https://claude.ai/chat/website/report.html)](./website/report.html) list in the app.
+See the full [[Known Issues](https://tanujgunasekara26-hue.github.io/my-toolbox/report.html)] list in the app.
 
 ---
 
@@ -445,7 +444,7 @@ We welcome contributions! Here's how:
 - 🔄 Performance optimization
 - 🌍 Translation/localization
 
-See [[CONTRIBUTING.md](https://claude.ai/chat/CONTRIBUTING.md)](./CONTRIBUTING.md) (coming soon) for detailed guidelines.
+See [[CONTRIBUTING.md](#)](./CONTRIBUTING.md) (coming soon) for detailed guidelines.
 
 ---
 
@@ -460,7 +459,7 @@ See [[CONTRIBUTING.md](https://claude.ai/chat/CONTRIBUTING.md)](./CONTRIBUTING.m
 
 ## 📝 License
 
-My Toolbox is licensed under the **MIT License** — see [[LICENSE](https://claude.ai/chat/LICENSE)](./LICENSE) for details.
+My Toolbox is licensed under the **MIT License** — see [[LICENSE](#)] for details.
 
 **Important Note:** This software includes assets belonging to Microsoft Corporation (Windows XP/Vista sounds, wallpapers) for personal, non-commercial use only. Windows® is a registered trademark of Microsoft Corporation.
 
@@ -468,13 +467,11 @@ My Toolbox is licensed under the **MIT License** — see [[LICENSE](https://clau
 
 ## 👨‍💻 About the Developer
 
-**Tanuj** from Sri Lanka 🇱🇰
+**Tanuj Gunasekara** from Sri Lanka 🇱🇰
 
 Passionate about creating useful, no-nonsense tools and exploring retro computing. Built My Toolbox to bring together the everyday utilities everyone needs, wrapped in a modern, beautiful interface.
 
-- 🌐 **Portfolio:** [[your-website.com](https://your-website.com/)](https://your-website.com)
-- 💼 **LinkedIn:** [[your-linkedin](https://linkedin.com/in/yourprofile)](https://linkedin.com/in/yourprofile)
-- 🐦 **Twitter:** [[@yourhandle](https://twitter.com/yourhandle)](https://twitter.com/yourhandle)
+- 🌐 **YouTube:** [[youtube](www.youtube.com/@Tom50056)
 
 ---
 
@@ -491,10 +488,10 @@ Passionate about creating useful, no-nonsense tools and exploring retro computin
 
 ## 💬 Questions? Issues? Ideas?
 
-- 🐛 **Found a bug?** — [[Report it here](https://claude.ai/chat/website/report.html)](./website/report.html)
-- 📚 **Need help?** — Check [[Documentation](https://claude.ai/chat/website/documentation.html)](./website/documentation.html)
+- 🐛 **Found a bug?** — [[Report it here](https://tanujgunasekara26-hue.github.io/my-toolbox/report.html)]
+- 📚 **Need help?** — Check [[Documentation](https://tanujgunasekara26-hue.github.io/my-toolbox/documentation.html)]
 - 💡 **Have a feature idea?** — Open a GitHub Issue
-- 💬 **Want to contribute?** — See [[Contributing](https://claude.ai/chat/da5c92b9-075f-4e22-8b74-4145c423a449#-contributing)](#-contributing)
+- 💬 **Want to contribute?** — See [[Contributing](https://tanujgunasekara26-hue.github.io/my-toolbox/contribute.html)]
 
 ---
 
@@ -515,8 +512,8 @@ Passionate about creating useful, no-nonsense tools and exploring retro computin
 
 **Made with ❤️ in Sri Lanka 🇱🇰**
 
-[[⭐ Star on GitHub](https://github.com/yourusername/my-toolbox)](https://github.com/yourusername/my-toolbox) if you find this useful!
+[[⭐ Star on GitHub](https://github.com/tanujgunasekara26-hue/my-toolbox)] if you find this useful!
 
-[[Download Now](https://github.com/yourusername/my-toolbox/releases)](https://github.com/yourusername/my-toolbox/releases) · [[View Website](https://your-website.com/)](https://your-website.com) · [[Read Docs](https://claude.ai/chat/website/documentation.html)](./website/documentation.html)
+[[Download Now](https://github.com/tanujgunasekara26-hue/my-toolbox/releases)]· [[View Website](https://tanujgunasekara26-hue.github.io/my-toolbox/)] · [[Read Docs](https://tanujgunasekara26-hue.github.io/my-toolbox/documentation.html)]
 
 </div>
